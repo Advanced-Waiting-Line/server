@@ -1,11 +1,8 @@
 {
-  "name": "user",
+  "name": "company",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "bin": {
-    "user": "httpServer.js"
-  },
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development nodemon ./bin/http.js"

@@ -46,6 +46,9 @@ let CompanySchema = new Schema ({
     minlength:[8,"Password minimum length is 8"],
     required: [true, 'password cannot be empty']
   },
+  queue: {
+    type: String
+  },
 },{timestamps: true})
 
 CompanySchema.pre('save', function(next){

@@ -1,4 +1,4 @@
-const User = require('../../modelMaster/User')
+const User = require('../model/User')
 const { comparePassword } = require('../helpers/bcryptjs')
 const { generateToken } = require('../helpers/jwt')
 // const { OAuth2Client } = require('google-auth-library');
@@ -6,9 +6,13 @@ const { generateToken } = require('../helpers/jwt')
 
 class UserController {
   static register(req, res, next) {
-    let {firstName, lastName, email, password} = req.body
-    let isAdmin = false
-    User.create({name, email, isAdmin, password})
+    let input = {}
+    req.body.firstName && (input.firstName = req.body.firstName)
+    req.body.lastName && (input.lastName = req.body.lastName)
+    req.body.email && (input.email = req.body.email)
+    req.body.password && (input.password = req.body.password)
+    req.body.location && (input.location = req.body.location)
+    User.create(input)
       .then((user) => {
         res.status(201).json(user)
       })

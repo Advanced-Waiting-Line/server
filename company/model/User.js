@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const {generatePassword} = require('./helpers/bcryptjs')
+const {generatePassword} = require('../helpers/bcryptjs')
 
 let UserSchema = new Schema ({
   firstName: {
