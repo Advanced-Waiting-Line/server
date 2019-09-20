@@ -111,7 +111,7 @@ class QueueLogController {
         duration,
         checkIn
       }
-      console.log(checkIn, "<<<<") 
+
       const newQueue = await QueueLog.create({
             companyId,
             userId,
