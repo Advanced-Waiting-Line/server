@@ -9,16 +9,19 @@ class CompanyController {
     let input = {}
     req.body.openTime && (input.openTime = req.body.openTime)
     req.body.closeTime && (input.closeTime = req.body.closeTime)
-    req.file.cloudStoragePublicUrl && (input.image = req.file.cloudStoragePublicUrl)
+    if (req.file){
+      req.file.cloudStoragePublicUrl && (input.image = req.file.cloudStoragePublicUrl)
+    }
     req.body.location && (input.location = req.body.location)
     req.body.email && (input.email = req.body.email)
     req.body.password && (input.password = req.body.password)
     req.body.queue && (input.queue = req.body.queue)
-    Company.create(input)
-      .then((company) => {
-        res.status(201).json(company)
-      })
-      .catch(next)
+    console.log(input)
+    // Company.create(input)
+    //   .then((company) => {
+    //     res.status(201).json(company)
+    //   })
+    //   .catch(next)
   }
 
   static login(req, res, next) {
