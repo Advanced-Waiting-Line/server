@@ -5,11 +5,15 @@ const {generatePassword} = require('../helpers/bcryptjs')
 let UserSchema = new Schema ({
   firstName: {
     type: String,
-    required: [true, "first cannot be empty"]
+    required: [true, "first name cannot be empty"]
   },
   lastName: {
     type: String,
-    required: [true, "last cannot be empty"]
+    required: [true, "last name cannot be empty"]
+  },
+  image : {
+    type: String,
+    required: [true, "user image cannot be empty"]
   },
   email: {
     type: String,
@@ -45,7 +49,7 @@ let UserSchema = new Schema ({
   },
   location: {
     type: String,
-    required: [true, 'password cannot be empty']
+    required: [true, 'location cannot be empty']
   },
 },{timestamps: true})
 

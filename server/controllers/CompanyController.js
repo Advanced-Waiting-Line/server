@@ -13,7 +13,6 @@ class CompanyController {
     req.body.email && (input.email = req.body.email)
     req.body.password && (input.password = req.body.password)
     req.body.queue && (input.queue = req.body.queue)
-    console.log('masuk controller company register')
     Company.create(input)
       .then((company) => {
         res.status(201).json(company)
