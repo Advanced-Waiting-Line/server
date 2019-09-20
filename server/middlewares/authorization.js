@@ -1,6 +1,6 @@
-// const Article = require('../models/Article')
+const Company = require('../model/Company')
 
-// module.exports = {
+module.exports = {
   // authorization(req, res, next) {
   //   Article.findById(req.params.id)
   //     .then((article) => {
@@ -14,18 +14,19 @@
   //     .catch(next)
   // },
 
-  // authorizationProject(req, res, next){
-  //   Project.findById(req.params.id)
-  //     .then((project)=>{
-  //       if (project.UserId == req.decode._id){
-  //         next()
-  //       }
-  //       else {
-  //         throw { status: 400, message: "Unauthorized" }
-  //       }
-  //     })
-  //     .catch(next)
-  // },
+  authorizationCompany(req, res, next){
+    console.log(req.params.companyId)
+    Company.findById(req.params.companyId)
+      .then((company)=>{
+        if (company._id == req.decode._id){
+          next()
+        }
+        else {
+          throw { status: 400, message: "Unauthorized" }
+        }
+      })
+      .catch(next)
+  },
 
   // authorizationProjectMember (req, res, next){
   //   console.log('masuk authorization project member', req.params.id)
@@ -42,4 +43,4 @@
   //     })
   //     .catch(next)
   // }
-// }
+}

@@ -9,14 +9,54 @@ class QueueLogController {
     .populate('companyId')
     .populate('userId')
     .then(queues=>{
-        res.json({
-            queues
-        })
+        res.json(queues)
     })
   }
 
+  static getAllCompanyQueueLog(req,res,next){
+    QueueLog.find({
+      "companyId": req.params.companyId})
+    .then(queues=>{
+      res.json(queues)
+    }).catch(err=>{
+      next(err)
+    })
+  }
+
+  static getTodayLog(req,res,next){
+    let logDate = new Date()
+    const start = logDate.setHours(7)
+    const end = logDate.setHours(23)
+    QueueLog.find({
+      "companyId": req.params.companyId,
+      "checkIn": {"$gte": start, "$lt": end}})
+    .then(queues=>{
+      res.json(queues)
+    }).catch(err=>{
+      next(err)
+    })
+  }
+
+  static getOneDayLog(req,res,next){
+    let logDate = new Date()
+    logDate.setDate(req.body.date)
+    logDate.setMonth(req.body.month)
+    logDate.setFullYear(req.body.year)
+
+    const start = logDate.setHours(7)
+    const end = logDate.setHours(23)
+    QueueLog.find({
+      "companyId": req.params.companyId,
+      "checkIn": {"$gte": start, "$lt": end}})
+    .then(queues=>{
+      res.json(queues)
+    }).catch(err=>{
+      next(err)
+    })
+    
+  }
   static addDuration(req,res,next){
-    Queue.findOneAndUpdate({ _id: res._id }, { $inc: { duration: req.body.increment } }, {new: true })
+    Queue.findOneAndUpdate({ _id: req.params.id }, { $inc: { duration: req.body.increment } }, {new: true })
       .then(queue=>{
           if(queue){
             res.json({
@@ -31,31 +71,18 @@ class QueueLogController {
       })
   }
 
-  static getOneDayLog(req,res,next){
-    let logDate = new Date()
-    logDate.setDate(req.body.date)
-    logDate.setMonth(req.body.month)
-    logDate.setFullYear(req.body.year)
-    
-    const start = logDate.setHours(7)
-    const end = logDate.setHours(23)
-    QueueLog.find({
-      "companyId": req.params.companyId,
-      "checkIn": {"$gte": start, "$lt": end}})
-    .then(queues=>{
-      res.json(queues)
-    }).catch(err=>{
-      next(err)
-    })
-    
-  }
-
+  
   static async create(req,res,next){
     try{
+      //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem
       })
-
+      const problem = req.body.problem
+      const duration = foundProblem.duration
+      
+      
+      //handle checkin time
       const lastQueue = await QueueLog.findOne().sort({'createdAt' : -1})
       let today = new Date()
       let checkIn = new Date()
@@ -68,40 +95,33 @@ class QueueLogController {
           checkIn.setSeconds(0)
         }
       } else {
-        checkIn.setTime(lastQueue.checkIn.getTime() + (problem.duration*60000))
+        checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
         console.log(checkIn) 
-      }
-      // console.log(checkIn, "<<<")
-      // if(lastQueue){
-      //     checkIn.setTime(checkIn.getTime() + (30*60000))
-      //     console.log(checkIn)   
-      // console.log('ada lastqueue')  
-      // }    
-      // // const {companyId, userId} = req.params
-      // const companyId = '5d838bb17679a81c797c7ccd'
-      // const userId = '5d838bb17679a81c797c7ccd'
-      // const problem = '5d838bb17679a81c797c7ccd'
-      // const duration = problem.duration
+      }   
       
-      // const newData = {
-      //   companyId,
-      //   userId,
-      //   problem,
-      //   duration,
-      //   checkIn
-      // }
-
-      // console.log(newData)
-      // const newQueue = await QueueLog.create({
-      //     companyId,
-      //     userId,
-      //     problem,
-      //     duration,
-      //     checkIn
-      // })
-      // console.log(newQueue)
-
-    } catch(err) {
+      const companyId = req.decode._id
+      const userId = req.params.userId
+        
+      const newData = {
+        companyId,
+        userId,
+        problem,
+        duration,
+        checkIn
+      }
+      
+      console.log(newData)
+      const newQueue = await QueueLog.create({
+            companyId,
+            userId,
+            problem,
+            duration,
+            checkIn
+        })
+        console.log(newQueue)
+        res.status(201).json(newQueue)
+        
+      } catch(err) {
       next(err)
     }
     
