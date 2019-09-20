@@ -9,6 +9,7 @@ class CompanyController {
     let input = {}
     req.body.openTime && (input.openTime = req.body.openTime)
     req.body.closeTime && (input.closeTime = req.body.closeTime)
+    req.file.cloudStoragePublicUrl && (input.image = req.file.cloudStoragePublicUrl)
     req.body.location && (input.location = req.body.location)
     req.body.email && (input.email = req.body.email)
     req.body.password && (input.password = req.body.password)

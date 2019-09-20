@@ -11,6 +11,10 @@ let CompanySchema = new Schema ({
     type: Date,
     required: [true, "date cannot be empty"]
   },
+  image : {
+    type: String,
+    required: [true, "user image cannot be empty"]
+  },
   location: {
     type: String
   },
