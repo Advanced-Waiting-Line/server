@@ -86,6 +86,7 @@ class QueueLogController {
       const lastQueue = await QueueLog.findOne().sort({'createdAt' : -1})
       let today = new Date()
       let checkIn = new Date()
+      
       if(!lastQueue){
         if(today.getHours() >=6 && today.getMinutes() >= 30){
           checkIn = delayCheckIn(today, 30)
@@ -96,8 +97,9 @@ class QueueLogController {
         }
       } else {
         checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
-        console.log(checkIn) 
+       
       }   
+
       
       const companyId = req.decode._id
       const userId = req.params.userId
@@ -109,8 +111,7 @@ class QueueLogController {
         duration,
         checkIn
       }
-      
-      console.log(newData)
+      console.log(checkIn, "<<<<") 
       const newQueue = await QueueLog.create({
             companyId,
             userId,
@@ -120,7 +121,6 @@ class QueueLogController {
         })
         console.log(newQueue)
         res.status(201).json(newQueue)
-        
       } catch(err) {
       next(err)
     }

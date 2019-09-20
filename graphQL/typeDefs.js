@@ -72,7 +72,25 @@ const typeDefs = gql`
     ): User,
     getAllCompanyQueue(
       token: String, 
-      companyId: String): [QueueLog]
+      companyId: String)
+    : [QueueLog],
+    getTodayLog(
+      token: String, 
+      companyId: String)
+    : [QueueLog],
+    getOneDayLog(
+      token: String, 
+      companyId: String,
+      date: Int,
+      month: Int,
+      year: Int)
+    : [QueueLog],  
+    createQueue(
+      token: String, 
+      companyId: String,
+      userId:String,
+      problemId: String,)
+    :QueueLog
   },
   
 
