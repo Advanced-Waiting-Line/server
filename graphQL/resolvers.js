@@ -7,24 +7,24 @@ const resolvers = {
   },
   Mutation: {
     registerCompany: async (parent, { openTime, closeTime, image, location, email, password }, context, info) => {
-      console.log('masuk sini')
+      
       if (image){
         image ? formData.append('file', Buffer.from(image, 'base64'), 'companyImage.jpeg') : null
       }
       // console.log(openTime, closeTime, location, email, password)
       let formData = new FormData()
-      openTime ? formData.append('openTime', openTime) : null
-      closeTime ? formData.append('closeTime', closeTime) : null
-      location ? formData.append('location', location) : null
-      email ? formData.append('email', email) : null
-      password ? formData.append('password', password) : null
-      
+      openTime ? formData.append('openTime', openTime) : console.log('gak masuk')
+      closeTime ? formData.append('closeTime', closeTime) : console.log('gak masuk')
+      location ? formData.append('location', location) : console.log('gak masuk')
+      email ? formData.append('email', email) : console.log('gak masuk')
+      password ? formData.append('password', password) : console.log('gak masuk')
+      console.log(formData)
       const { data } = await axios.post(`${awanUrl}/companies/register`, formData, {
         headers: {
           "Content_type": `multipart/form-data; boundary=${formData._boundary}`
         }
       })
-      return data
+      // return data
     },
     loginCompany: async (parent, { email, password }, context, info) => {
       let input = {}
