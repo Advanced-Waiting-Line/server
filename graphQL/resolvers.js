@@ -7,45 +7,66 @@ const resolvers = {
   },
   Mutation: {
     registerCompany: async (parent, { openTime, closeTime, image, location, email, password }, context, info) => {
+      // console.log(openTime, closeTime, location, email, password, image)
       
-      if (image){
-        image ? formData.append('file', Buffer.from(image, 'base64'), 'companyImage.jpeg') : null
-      }
-      // console.log(openTime, closeTime, location, email, password)
-      let formData = new FormData()
-      openTime ? formData.append('openTime', openTime) : console.log('gak masuk')
-      closeTime ? formData.append('closeTime', closeTime) : console.log('gak masuk')
-      location ? formData.append('location', location) : console.log('gak masuk')
-      email ? formData.append('email', email) : console.log('gak masuk')
-      password ? formData.append('password', password) : console.log('gak masuk')
-      console.log(formData)
-      const { data } = await axios.post(`${awanUrl}/companies/register`, formData, {
-        headers: {
-          "Content_type": `multipart/form-data; boundary=${formData._boundary}`
-        }
-      })
-      // return data
+      // ======== Tanya Instructur cara form data ========
+      // const formData = new FormData()
+      // formData.append('openTime', openTime)
+      // openTime ? formData.append('openTime', openTime) : console.log('gak masuk')
+      // closeTime ? formData.append('closeTime', closeTime) : console.log('gak masuk')
+      // location ? formData.append('location', location) : console.log('gak masuk')
+      // email ? formData.append('email', email) : console.log('gak masuk')
+      // password ? formData.append('password', password) : console.log('gak masuk')
+      // if (image){
+      //   formData.append('file', Buffer.from(image, 'base64'), 'companyImage.jpeg')
+      // }
+      
+      let input = {}
+      openTime && (input.openTime = openTime)
+      closeTime && (input.closeTime = closeTime)
+      image && (input.image = image)
+      location && (input.location = location)
+      email && (input.email = email)
+      password && (input.password = password)
+
+      const { data } = await 
+        axios({
+          url: `${awanUrl}/companies/register`,
+          method: `post`,
+          data: input,
+          // headers: {
+          //   "Content_type": `multipart/form-data; boundary=${formData._boundary}`
+          // }
+        })
+      return data
+
     },
     loginCompany: async (parent, { email, password }, context, info) => {
       let input = {}
       email && (input.email = email)
       password && (input.password = password)
+      
       const { data } = await axios.post(`${awanUrl}/companies/login`, input)
-      console.log(data)
       return data
     },
     registerUser: async (parent, { firstName, lastName, image, email, password, location }, context, info) => {
-      const formData = new FormData()
-      firstName ? formData.append('firstName', firstName) : null
-      lastName ? formData.append('lastName', lastName) : null
-      image ? formData.append('file', Buffer.from(image, 'base64'), 'userImage.jpeg') : null
-      email ? formData.append('email', email) : null
-      password ? formData.append('password', password) : null
-      location ? formData.append('location', location) : null
-      const { data } = await axios.post(`${awanUrl}/users/register`, formData, {
-        headers: {
-          "Content_type": `multipart/form-data; boundary=${formData._boundary}`
-        }
+      // if (image){
+      //   formData.append('file', Buffer.from(image, 'base64'), 'companyImage.jpeg')
+      // }
+      console.log('masuk siniii')
+      console.log({ firstName, lastName, image, email, password, location })
+      let input = {}
+      firstName && (input.firstName = firstName)
+      lastName && (input.lastName = lastName)
+      image && (input.image = image)
+      email && (input.email = email)
+      password && (input.password = password)
+      location && (input.location = location)
+
+      const { data } = await axios.post(`${awanUrl}/users/register`, input, {
+        // headers: {
+        //   "Content_type": `multipart/form-data; boundary=${formData._boundary}`
+        // }
       })
       return data
     },
@@ -54,7 +75,6 @@ const resolvers = {
       email && (input.email = email)
       password && (input.password = password)
       const { data } = await axios.post(`${awanUrl}/users/login`, input)
-      console.log(data)
       return data
     },
     getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
