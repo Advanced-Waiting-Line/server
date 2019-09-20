@@ -15,8 +15,8 @@ const typeDefs = gql`
     openTime : String,
     closeTime: String,
     location: String,
-    email: Int,
-    password: [String],
+    email: String,
+    password: String,
     queue: [String]
   },
   type User {
@@ -27,6 +27,11 @@ const typeDefs = gql`
     email: String,
     password: String,
     location: String
+  },
+  type Login {
+    token: String,
+    ${'_id'}: String,
+    email: String,
   },
   type QueueLog{
     _id: String,
@@ -42,34 +47,26 @@ const typeDefs = gql`
       openTime: String,
       closeTime: String,
       location: String,
+      image: String,
       email: String,
       password: String,
     ): Company,
     loginCompany(
-      openTime: String,
-      closeTime: String,
-      location: String,
-      image: String,
-      email: Int,
-      password: [String],
-      queue: [String]
-    ): Company,
+      email: String,
+      password: String,
+    ): Login,
     registerUser(
-      openTime: String,
-      closeTime: String,
-      location: String,
-      email: Int,
-      password: [String],
-      queue: [String]
+      firstName: String,
+      lastName: String,
+      image: String,
+      email: String,
+      password: String,
+      location: String
     ): User,
     loginUser(
-      openTime: String,
-      closeTime: String,
-      location: String,
-      email: Int,
-      password: [String],
-      queue: [String]
-    ): User,
+      email: String,
+      password: String
+    ): Login,
     getAllCompanyQueue(
       token: String, 
       companyId: String)
