@@ -56,8 +56,13 @@ const resolvers = {
       const { data } = await axios.post(`${awanUrl}/users/login`, input)
       console.log(data)
       return data
-    }
-  }
+    },
+    getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
+    const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
+    return result
+  },
+  },
+  
 }
 
 module.exports = resolvers
