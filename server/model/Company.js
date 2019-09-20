@@ -13,10 +13,12 @@ let CompanySchema = new Schema ({
   },
   image : {
     type: String,
-    required: [true, "user image cannot be empty"]
+    
   },
   location: {
-    type: String
+    lattitude: {
+      type: String
+    },
   },
   email: {
     type: String,

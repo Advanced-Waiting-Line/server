@@ -25,17 +25,17 @@ const typeDefs = gql`
   },
   type Mutation {
     registerCompany(
-      openTime : String,
+      openTime: String,
       closeTime: String,
       location: String,
-      email: Int,
-      password: [String],
-      queue: [String]
+      email: String,
+      password: String,
     ): Company,
     loginCompany(
       openTime : String,
       closeTime: String,
       location: String,
+      image: String,
       email: Int,
       password: [String],
       queue: [String]
