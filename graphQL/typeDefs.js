@@ -1,9 +1,14 @@
 const { gql } = require('apollo-server-express')
 
 const typeDefs = gql`
+  scalar Date
+  type MyType {
+   created: Date
+  }
   type Query {
     company (id: String): Company,
     user (id: String): User
+    queueLog: QueueLog
   }
   type Company {
     ${'_id'}: String,
@@ -23,9 +28,18 @@ const typeDefs = gql`
     password: String,
     location: String
   },
+  type QueueLog{
+    _id: String,
+    companyId: String,
+    userId: String,
+    problem: String,
+    duration: Int,
+    checkIn: String,
+  },
+  ,
   type Mutation {
     registerCompany(
-      openTime : String,
+      openTime: String,
       closeTime: String,
       location: String,
       email: Int,
@@ -33,7 +47,7 @@ const typeDefs = gql`
       queue: [String]
     ): Company,
     loginCompany(
-      openTime : String,
+      openTime: String,
       closeTime: String,
       location: String,
       email: Int,
@@ -41,7 +55,7 @@ const typeDefs = gql`
       queue: [String]
     ): Company,
     registerUser(
-      openTime : String,
+      openTime: String,
       closeTime: String,
       location: String,
       email: Int,
@@ -49,14 +63,19 @@ const typeDefs = gql`
       queue: [String]
     ): User,
     loginUser(
-      openTime : String,
+      openTime: String,
       closeTime: String,
       location: String,
       email: Int,
       password: [String],
       queue: [String]
     ): User,
-  }
+    getAllCompanyQueue(
+      token: String, 
+      companyId: String): [QueueLog]
+  },
+  
+
 `
 
 module.exports = typeDefs
