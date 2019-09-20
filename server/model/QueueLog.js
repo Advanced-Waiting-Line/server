@@ -24,7 +24,8 @@ const queueLogSchema = new Schema({
         type: Number
     }
 }, {
-    timestamps: true
+    timestamps: false,
+    versionKey: false
 })
 
 const QueueLog = mongoose.model('QueueLog', queueLogSchema);

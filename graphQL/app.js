@@ -7,10 +7,15 @@ const cors = require('cors')
 const app = express()
 const PORT = 4000
 
+const QueueAPI = require('./datasource/queue')
+
 app.use(cors())
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  dataSources: () => ({
+  queueAPI: new QueueAPI()
+}),
 })
 
 server.applyMiddleware({app, path: '/graphql'})
