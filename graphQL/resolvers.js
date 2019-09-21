@@ -91,7 +91,6 @@ const resolvers = {
     },
     createQueue: async (_, {token, companyId, userId, problemId}, {dataSources}) => {
       const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
-      console.log(result)
       return result  
     },
   },
