@@ -24,9 +24,9 @@ class QueueLogController {
   }
 
   static getTodayLog(req,res,next){
-    let logDate = new Date()
-    const start = logDate.setHours(7)
-    const end = logDate.setHours(23)
+    let today = new Date()
+    const start = new Date(today.setHours(6))
+    const end = new Date( today.setHours(23))
     QueueLog.find({
       "companyId": req.params.companyId,
       "checkIn": {"$gte": start, "$lt": end}})
@@ -80,17 +80,32 @@ class QueueLogController {
       })
       const problem = req.body.problem
       const duration = foundProblem.duration
+
+
+      
+
       
       
       //handle checkin time
-      const lastQueue = await QueueLog.findOne().sort({'createdAt' : -1})
       let today = new Date()
       let checkIn = new Date()
+
+      const start = new Date(today.setHours(6))
+      const end = new Date( today.setHours(23))
+    
+      const lastQueue = await QueueLog
+        .findOne({
+          "companyId": req.params.companyId,
+          "checkIn": {"$gte": start, "$lt": end}})          
+        .sort({createdAt: 'descending'})
+
+        console.log(lastQueue)
       
       if(!lastQueue){
         if(today.getHours() >=6 && today.getMinutes() >= 30){
           checkIn = delayCheckIn(today, 30)
         } else {
+          console.log("masuk sini")
           checkIn.setHours(7)
           checkIn.setMinutes(0)
           checkIn.setSeconds(0)
@@ -111,6 +126,8 @@ class QueueLogController {
         duration,
         checkIn
       }
+      var options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      console.log(checkIn.toLocaleDateString("en-US", options), " checkin time in local <<<")
 
       const newQueue = await QueueLog.create({
             companyId,
