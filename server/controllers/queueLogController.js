@@ -177,7 +177,22 @@ class QueueLogController {
             duration,
             checkIn
         })
-        console.log(newQueue)
+        
+        if(newQueue){
+          const pushedQueue = await Company.updateOne(
+          {
+            _id: req.decode._id
+          }, 
+          {
+            $push:{
+              queue: newQueue._id
+            }
+          },
+            {new: true}
+          )
+          console.log(pushedQueue)
+        }
+
         res.status(201).json(newQueue)
         // res.send('ok')
       } catch(err) {
