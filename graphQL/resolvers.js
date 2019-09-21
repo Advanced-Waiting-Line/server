@@ -77,6 +77,8 @@ const resolvers = {
       const { data } = await axios.post(`${awanUrl}/users/login`, input)
       return data
     },
+
+    //queue
     getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
       const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
       return result  
@@ -93,6 +95,27 @@ const resolvers = {
       const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
       return result  
     },
+
+    //problem
+    getCompanyProblem: async (_,{companyId}, { dataSources }) => {
+      const result = await dataSources.problemAPI.getCompanyProblem(companyId)
+      console.log(result)
+      return result  
+    },
+    createProblem: async (_,{token, name, duration}, { dataSources }) => {
+      const result = await dataSources.problemAPI.createProblem(token, name, duration)
+      console.log(result)
+      return result  
+    },
+    deleteProblem: async (_,{token, problemId}, { dataSources }) => {
+      const result = await dataSources.problemAPI.deleteProblem(token,problemId)
+      return result
+    },
+    updateProblem: async(_,{token, problemId, name, duration}, {dataSources}) => {
+      const result = await dataSources.problemAPI.updateProblem(token, problemId, name, duration)
+      console.log(result)
+      return result
+    }
   },
   
 }

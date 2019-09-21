@@ -41,6 +41,12 @@ const typeDefs = gql`
     duration: Int,
     checkIn: String,
   },
+  type Problem{
+    _id: String,
+    companyId: String,
+    name: String,
+    duration: Int
+  }
   ,
   type Mutation {
     registerCompany(
@@ -67,6 +73,7 @@ const typeDefs = gql`
       email: String,
       password: String
     ): Login,
+  # queue
     getAllCompanyQueue(
       token: String, 
       companyId: String)
@@ -87,7 +94,27 @@ const typeDefs = gql`
       companyId: String,
       userId:String,
       problemId: String,)
-    :QueueLog
+    :QueueLog,
+  #problem
+    getCompanyProblem(
+      companyId: String
+    )
+    :[Problem],
+    createProblem(
+      token: String,
+      name: String,
+      duration: Int
+    ):Problem
+    deleteProblem(
+      token: String,
+      problemId: String
+    ):Problem
+    updateProblem(
+      token: String,
+      problemId: String,
+      name: String,
+      duration: Int
+    ):Problem
   },
   
 
