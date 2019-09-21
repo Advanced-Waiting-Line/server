@@ -57,9 +57,9 @@ const typeDefs = gql`
   },
   type QueueLog{
     _id: String,
-    companyId: String,
-    userId: String,
-    problem: String,
+    companyId: Company,
+    userId: User,
+    problem: Problem,
     duration: Int,
     checkIn: String,
   },
