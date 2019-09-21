@@ -153,6 +153,13 @@ class QueueLogController {
       }   
 
       today = new Date()
+
+      if(checkIn > closeTime ){
+        next({
+          code: 403,
+          message: "the queue already beyond closing time"
+        })
+      }
       
       const companyId = req.decode._id
       const userId = req.params.userId
@@ -176,31 +183,58 @@ class QueueLogController {
             problem,
             duration,
             checkIn
-        })
-        
-        if(newQueue){
-          const pushedQueue = await Company.updateOne(
-          {
-            _id: req.decode._id
-          }, 
-          {
-            $push:{
-              queue: newQueue._id
-            }
-          },
-            {new: true}
-          )
-          console.log(pushedQueue)
-        }
+      })
+      
+      if(newQueue){
+        const pushedQueue = await Company.updateOne(
+        {
+          _id: req.decode._id
+        }, 
+        {
+          $push:{
+            queue: newQueue._id
+          }
+        },
+          {new: true}
+        )
+        console.log(pushedQueue)
+      }
 
-        res.status(201).json(newQueue)
-        // res.send('ok')
-      } catch(err) {
+      res.status(201).json(newQueue)
+      // res.send('ok')
+    } catch(err) {
       next(err)
     }
     
     
 
+  }
+
+
+  static async updateDuration(req,res,next){
+    const {duration} = req.body
+    const currentQueue = QueueLog.find({
+      _id: req.params.queueLogId
+    })
+    
+    let currentCheckIn = new Date(currentQueue.checkIn)    
+
+    const end = new Date(currentCheckIn.setHours(23))
+  
+    const nextQueue = await QueueLog
+      .find({
+        "companyId": req.params.companyId,
+        "checkIn": {"$gt": currentCheckIn, "$lt": end}})         
+
+    // QueueLog.updateMany({
+    //   companyId: req.decode._id
+    // },{
+    //   $inc:{
+    //     duration: duration,
+    //     checkIn: (duration*60000)
+    //   }
+    // })
+    
   }
 
   
