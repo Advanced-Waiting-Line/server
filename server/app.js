@@ -8,8 +8,9 @@ const app = express()
 const cors = require('cors')
 const route = require('./routes/index')
 const errorHandler = require('./middlewares/errorHandler')
-
+const cron = require('node-cron');
 const mongoose = require('mongoose')
+const Company = require('./model/Company')
 
 // === database ===
 if (process.env.NODE_ENV=='test'){
@@ -21,7 +22,7 @@ if (process.env.NODE_ENV=='test'){
 }
 else {
   mongoose.connect(`mongodb+srv://mongodb:${process.env.MONGODB}@cluster0-qtldw.gcp.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
-  {useNewUrlParser: true}, function(err){
+  {useNewUrlParser: true, useUnifiedTopology: true}, function(err){
     if (err) throw err
     else console.log('mongoose connected to mongodb atlas')
   })
@@ -35,5 +36,17 @@ app.use(cors())
 //routes and error handling
 app.use('/', route)
 app.use(errorHandler)
+
+cron.schedule('0 0 * * *', () => {
+  // Setiap 7 detik (untuk keperluan contoh: */7 * * * * *
+  // console.log('running a task every second');
+  Company.updateMany({}, {queue: []})
+    .then((status) => {
+      console.log('company queue cleared')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+})
 
 module.exports = app

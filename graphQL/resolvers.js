@@ -49,11 +49,11 @@ const resolvers = {
       const { data } = await axios.post(`${awanUrl}/companies/login`, input)
       return data
     },
+    clearQueueCompany : async (parent, { companyId }, context, info) => {
+      const { data } = await axios.post(`${awanUrl}/companies/clearQueue/${companyId}`)
+      return data
+    },
     registerUser: async (parent, { firstName, lastName, image, email, password, location }, context, info) => {
-      // if (image){
-      //   formData.append('file', Buffer.from(image, 'base64'), 'companyImage.jpeg')
-      // }
-      console.log('masuk siniii')
       console.log({ firstName, lastName, image, email, password, location })
       let input = {}
       firstName && (input.firstName = firstName)
@@ -75,6 +75,22 @@ const resolvers = {
       email && (input.email = email)
       password && (input.password = password)
       const { data } = await axios.post(`${awanUrl}/users/login`, input)
+      return data
+    },
+    updateUser: async (parent, { userId, firstName, lastName, image, email, password, location }, context, info) => {
+      let input = {}
+      firstName && (input.firstName = firstName)
+      lastName && (input.lastName = lastName)
+      image && (input.image = image)
+      email && (input.email = email)
+      password && (input.password = password)
+      location && (input.location = location)
+
+      const { data } = await axios.patch(`${awanUrl}/users/update/${userId}`, input)
+      return data
+    },
+    deleteUser: async (parent, { userId }, context, info) => {
+      const { data } = await axios.delete(`${awanUrl}/users/delete/${userId}`)
       return data
     },
     getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {

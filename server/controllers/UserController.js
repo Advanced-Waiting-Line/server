@@ -55,6 +55,35 @@ class UserController {
       .catch(next)
   }
 
+  static update(req,res,next){
+    let input = {}
+    if (req.file){
+      req.file.cloudStoragePublicUrl && (input.image = req.file.cloudStoragePublicUrl)
+    }
+    req.body.firstName && (input.firstName = req.body.firstName)
+    req.body.lastName && (input.lastName = req.body.lastName)
+    req.body.email && (input.email = req.body.email)
+    req.body.password && (input.password = req.body.password)
+    req.body.location && (input.location = req.body.location)
+
+    User.updateOne({
+      _id: req.params.id
+    }, input)
+      .then((result) => {
+        res.status(200).json(result)
+      })
+  }
+
+  static delete(req,res,next){
+    User.deleteOne({
+      _id: req.params.id
+    })
+      .then((result) =>{
+        res.status(200).json(result)
+      })
+      .catch(next)
+  }
+
   // static loginGoogle(req, res, next) {
   //   console.log('================', process.env.GOOGLE_CLIENT_ID)
   //   client.verifyIdToken({

@@ -28,10 +28,13 @@ const typeDefs = gql`
     password: String,
     location: String
   },
-  type Login {
+  type Notification {
     token: String,
     ${'_id'}: String,
     email: String,
+    n: Int,
+    nModified: Int,
+    ok: Int,
   },
   type QueueLog{
     _id: String,
@@ -54,7 +57,10 @@ const typeDefs = gql`
     loginCompany(
       email: String,
       password: String,
-    ): Login,
+    ): Notification,
+    clearQueueCompany(
+      companyId: String
+    ):Notification,
     registerUser(
       firstName: String,
       lastName: String,
@@ -66,7 +72,19 @@ const typeDefs = gql`
     loginUser(
       email: String,
       password: String
-    ): Login,
+    ): Notification,
+    updateUser(
+      userId: String,
+      firstName: String,
+      lastName: String,
+      image: String,
+      email: String,
+      password: String,
+      location: String
+    ): Notification,
+    deleteUser(
+      userId: String,
+    ): Notification,
     getAllCompanyQueue(
       token: String, 
       companyId: String)
