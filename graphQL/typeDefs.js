@@ -9,6 +9,25 @@ const typeDefs = gql`
     company (id: String): Company,
     user (id: String): User
     queueLog: QueueLog
+    getAllCompanyQueue(
+      token: String, 
+      companyId: String)
+    : [QueueLog],
+    getTodayLog(
+      token: String, 
+      companyId: String)
+    : [QueueLog],
+    getOneDayLog(
+      token: String, 
+      companyId: String,
+      date: Int,
+      month: Int,
+      year: Int)
+    : [QueueLog],  
+    getCompanyProblem(
+      companyId: String
+    )
+    :[Problem],
   }
   type Company {
     ${'_id'}: String,
@@ -91,21 +110,7 @@ const typeDefs = gql`
     deleteUser(
       userId: String,
     ): Notification,
-    getAllCompanyQueue(
-      token: String, 
-      companyId: String)
-    : [QueueLog],
-    getTodayLog(
-      token: String, 
-      companyId: String)
-    : [QueueLog],
-    getOneDayLog(
-      token: String, 
-      companyId: String,
-      date: Int,
-      month: Int,
-      year: Int)
-    : [QueueLog],  
+   #queue
     createQueue(
       token: String, 
       companyId: String,
@@ -113,10 +118,7 @@ const typeDefs = gql`
       problemId: String,)
     :QueueLog,
   #problem
-    getCompanyProblem(
-      companyId: String
-    )
-    :[Problem],
+    
     createProblem(
       token: String,
       name: String,

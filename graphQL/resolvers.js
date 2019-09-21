@@ -4,6 +4,23 @@ const FormData = require('form-data')
 
 const resolvers = {
   Query: {
+    getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
+      const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
+      return result  
+    },
+    getTodayLog: async (_, {token, companyId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getTodayLog(token, companyId)
+      return result  
+    },
+    getOneDayLog: async (_, {token, companyId, date, month, year}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getOneDayLog(token, companyId, date, month, year)
+      return result  
+    },
+    getCompanyProblem: async (_,{companyId}, { dataSources }) => {
+      const result = await dataSources.problemAPI.getCompanyProblem(companyId)
+      console.log(result)
+      return result  
+    },
   },
   Mutation: {
     registerCompany: async (parent, { openTime, closeTime, image, location, email, password }, context, info) => {
@@ -93,29 +110,14 @@ const resolvers = {
       const { data } = await axios.delete(`${awanUrl}/users/delete/${userId}`)
       return data
     },
-    getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
-      const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
-      return result  
-    },
-    getTodayLog: async (_, {token, companyId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getTodayLog(token, companyId)
-      return result  
-    },
-    getOneDayLog: async (_, {token, companyId, date, month, year}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getOneDayLog(token, companyId, date, month, year)
-      return result  
-    },
+    
     createQueue: async (_, {token, companyId, userId, problemId}, {dataSources}) => {
       const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
       return result  
     },
 
     //problem
-    getCompanyProblem: async (_,{companyId}, { dataSources }) => {
-      const result = await dataSources.problemAPI.getCompanyProblem(companyId)
-      console.log(result)
-      return result  
-    },
+    
     createProblem: async (_,{token, name, duration}, { dataSources }) => {
       const result = await dataSources.problemAPI.createProblem(token, name, duration)
       console.log(result)
