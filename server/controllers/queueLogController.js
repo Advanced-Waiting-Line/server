@@ -1,6 +1,7 @@
 const QueueLog = require('../model/QueueLog')
 const Problem = require('../model/Problem')
 const delayCheckIn = require('../helpers/checkInModifyer/delayCheckIn')
+const Company = require('../model/Company')
 
 class QueueLogController {
   static findAll(req,res,next){
@@ -73,48 +74,83 @@ class QueueLogController {
 
   
   static async create(req,res,next){
+    const  options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
     try{
       //handle problem
       const foundProblem = await Problem.findOne({
-        _id: req.body.problem
+        _id: req.body.problem,
+        companyId: req.decode._id
       })
+      if(!foundProblem){
+        next({
+          code: 404,
+          message: "problem doesn't exist"
+        })
+      }
       const problem = req.body.problem
       const duration = foundProblem.duration
 
 
-      
+      //handle company
 
-      
-      
-      //handle checkin time
+      const currentCompany = await Company.findOne({
+        _id: req.decode._id
+      })
+      //handle open & close time
       let today = new Date()
-      let checkIn = new Date()
+      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      const openHour = currentCompany.openTime.getHours()
+      const openMinute = currentCompany.openTime.getMinutes()
 
+      const closeHour = currentCompany.closeTime.getHours()
+      const closeMinute = currentCompany.closeTime.getMinutes()
+
+      const openTime = new Date(today.setHours(openHour))
+      openTime.setMinutes(openMinute)
+
+      const closeTime = new Date(today.setHours(closeHour))
+      closeTime.setMinutes(closeMinute)
+
+      
+
+      //handle checkin time
+      let checkIn = new Date()
+      today = new Date()
       const start = new Date(today.setHours(6))
-      const end = new Date( today.setHours(23))
+      const end = new Date(today.setHours(23))
     
       const lastQueue = await QueueLog
         .findOne({
           "companyId": req.params.companyId,
           "checkIn": {"$gte": start, "$lt": end}})          
         .sort({createdAt: 'descending'})
+        .populate('problem')
 
-        console.log(lastQueue)
-      
+      today = new Date()
+
       if(!lastQueue){
-        if(today.getHours() >=6 && today.getMinutes() >= 30){
+        if(today >= (openTime - 30*600000)){
           checkIn = delayCheckIn(today, 30)
+        
         } else {
-          console.log("masuk sini")
-          checkIn.setHours(7)
-          checkIn.setMinutes(0)
+
+          checkIn.setHours(openHour)
+          checkIn.setMinutes(openMinute)
           checkIn.setSeconds(0)
         }
       } else {
+        let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
+        if(latestSolved > closeTime ){
+          next({
+            code: 403,
+            message: "the queue already beyond closing time"
+          })
+        }
         checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
        
       }   
 
+      today = new Date()
       
       const companyId = req.decode._id
       const userId = req.params.userId
@@ -126,18 +162,24 @@ class QueueLogController {
         duration,
         checkIn
       }
-      var options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
-      console.log(checkIn.toLocaleDateString("en-US", options), " checkin time in local <<<")
+      
+      console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
+      console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
+      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
-      const newQueue = await QueueLog.create({
-            companyId,
-            userId,
-            problem,
-            duration,
-            checkIn
-        })
-        console.log(newQueue)
-        res.status(201).json(newQueue)
+      // console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+      // console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
+      // const newQueue = await QueueLog.create({
+      //       companyId,
+      //       userId,
+      //       problem,
+      //       duration,
+      //       checkIn
+      //   })
+      //   console.log(newQueue)
+      //   res.status(201).json(newQueue)
+        res.send('ok')
       } catch(err) {
       next(err)
     }

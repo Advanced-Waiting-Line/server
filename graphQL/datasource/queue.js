@@ -65,10 +65,7 @@ class QueueAPI extends RESTDataSource {
                 headers:{
                 token
             }
-        });
-        
-        console.log(response)
-        
+        });        
         return this.queueReducer(response)
     }
     
