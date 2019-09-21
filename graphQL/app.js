@@ -8,13 +8,15 @@ const app = express()
 const PORT = 4000
 
 const QueueAPI = require('./datasource/queue')
+const ProblemAPI = require('./datasource/problem')
 
 app.use(cors())
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources: () => ({
-  queueAPI: new QueueAPI()
+  queueAPI: new QueueAPI(),
+  problemAPI: new ProblemAPI()
 }),
 })
 
