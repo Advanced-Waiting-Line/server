@@ -147,7 +147,9 @@ class QueueLogController {
           })
         }
         checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
-       
+        
+      console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+      console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
       }   
 
       today = new Date()
@@ -168,18 +170,16 @@ class QueueLogController {
       console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
       console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
-      // console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
-      // console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
-      // const newQueue = await QueueLog.create({
-      //       companyId,
-      //       userId,
-      //       problem,
-      //       duration,
-      //       checkIn
-      //   })
-      //   console.log(newQueue)
-      //   res.status(201).json(newQueue)
-        res.send('ok')
+      const newQueue = await QueueLog.create({
+            companyId,
+            userId,
+            problem,
+            duration,
+            checkIn
+        })
+        console.log(newQueue)
+        res.status(201).json(newQueue)
+        // res.send('ok')
       } catch(err) {
       next(err)
     }

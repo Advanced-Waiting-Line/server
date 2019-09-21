@@ -15,7 +15,6 @@ module.exports = {
   // },
 
   authorizationCompany(req, res, next){
-    console.log(req.params.companyId)
     Company.findById(req.params.companyId)
       .then((company)=>{
         if (company._id == req.decode._id){
