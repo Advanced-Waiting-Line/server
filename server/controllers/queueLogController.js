@@ -17,6 +17,9 @@ class QueueLogController {
   static getAllCompanyQueueLog(req,res,next){
     QueueLog.find({
       "companyId": req.params.companyId})
+    .populate('problem')
+    .populate('companyId')
+    .populate('userId')
     .then(queues=>{
       res.json(queues)
     }).catch(err=>{
@@ -31,6 +34,9 @@ class QueueLogController {
     QueueLog.find({
       "companyId": req.params.companyId,
       "checkIn": {"$gte": start, "$lt": end}})
+      .populate('problem')
+    .populate('companyId')
+    .populate('userId')
     .then(queues=>{
       res.json(queues)
     }).catch(err=>{
@@ -49,6 +55,9 @@ class QueueLogController {
     QueueLog.find({
       "companyId": req.params.companyId,
       "checkIn": {"$gte": start, "$lt": end}})
+    .populate('problem')
+    .populate('companyId')
+    .populate('userId')
     .then(queues=>{
       res.json(queues)
     }).catch(err=>{
