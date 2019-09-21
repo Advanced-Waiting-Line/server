@@ -53,7 +53,7 @@ let CompanySchema = new Schema ({
     required: [true, 'password cannot be empty']
   },
   queue: {
-    type: String
+    type: Array
   },
 },{timestamps: true})
 

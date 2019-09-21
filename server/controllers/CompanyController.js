@@ -56,6 +56,16 @@ class CompanyController {
       .catch(next)
   }
 
+  static clearQueue (req, res, next) {
+    Company.updateOne({
+      _id: req.params.id
+    }, {queue: []})
+      .then((status) => {
+        res.status(200).json(status)
+      })
+      .catch(next)
+  }
+
   // static loginGoogle(req, res, next) {
   //   console.log('================', process.env.GOOGLE_CLIENT_ID)
   //   client.verifyIdToken({
