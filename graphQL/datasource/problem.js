@@ -53,7 +53,13 @@ class ProblemAPI extends RESTDataSource {
     problemReducer(problem){
         return {
             _id: problem._id,
-          companyId: problem.companyId,
+            companyId: {
+                _id: problem.companyId._id,
+                openTime: problem.companyId.openTime,
+                closeTime: problem.companyId.closeTime,
+                location: problem.companyId.location,
+                queue: problem.companyId.queue
+              },
           name: problem.name,
           duration: problem.duration,
         }

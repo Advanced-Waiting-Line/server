@@ -222,27 +222,30 @@ class QueueLogController {
 
   static async updateDuration(req,res,next){
     const {duration} = req.body
-    const currentQueue = QueueLog.find({
+    const currentQueue = await QueueLog.findOne({
       _id: req.params.queueLogId
     })
-    
     let currentCheckIn = new Date(currentQueue.checkIn)    
 
-    const end = new Date(currentCheckIn.setHours(23))
-  
+    const end = new Date(currentCheckIn.getTime())
+    end.setHours(23)
     const nextQueue = await QueueLog
       .find({
-        "companyId": req.params.companyId,
-        "checkIn": {"$gt": currentCheckIn, "$lt": end}})         
+        companyId: req.decode._id,
+        checkIn: {"$gte": currentCheckIn, "$lt": end}
+      })         
+      
+      nextQueue.forEach( async queue => {
+        await QueueLog.updateOne({
+          _id : queue._id
+        },{
+          $set:{ 
+            checkIn: new Date(queue.checkIn.getTime() + (duration*60000))
+          }
+        })
+      });
 
-    // QueueLog.updateMany({
-    //   companyId: req.decode._id
-    // },{
-    //   $inc:{
-    //     duration: duration,
-    //     checkIn: (duration*60000)
-    //   }
-    // })
+      res.send('ok')
     
   }
 

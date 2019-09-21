@@ -65,7 +65,7 @@ const typeDefs = gql`
   },
   type Problem{
     _id: String,
-    companyId: String,
+    companyId: Company,
     name: String,
     duration: Int
   }
