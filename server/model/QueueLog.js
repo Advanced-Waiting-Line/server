@@ -24,7 +24,7 @@ const queueLogSchema = new Schema({
         type: Number
     }
 }, {
-    timestamps: false,
+    timestamps: true,
     versionKey: false
 })
 

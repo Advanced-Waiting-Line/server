@@ -78,9 +78,21 @@ const resolvers = {
       return data
     },
     getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
-    const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
-    return result
-  },
+      const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
+      return result  
+    },
+    getTodayLog: async (_, {token, companyId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getTodayLog(token, companyId)
+      return result  
+    },
+    getOneDayLog: async (_, {token, companyId, date, month, year}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getOneDayLog(token, companyId, date, month, year)
+      return result  
+    },
+    createQueue: async (_, {token, companyId, userId, problemId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
+      return result  
+    },
   },
   
 }

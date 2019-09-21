@@ -7,7 +7,7 @@ router.get("/", queueLogController.findAll)
 router.use(authenticationCompany)
 router.get('/:companyId', queueLogController.getAllCompanyQueueLog)
 router.get('/todayLog/:companyId', queueLogController.getTodayLog)
-router.get('/oneDayLog/:companyId', queueLogController.getOneDayLog)
+router.post('/oneDayLog/:companyId', queueLogController.getOneDayLog)
 router.post('/:companyId/:userId', authorizationCompany, queueLogController.create)
 
 
