@@ -47,7 +47,7 @@ const typeDefs = gql`
     image: String
     email: String
     password: String
-    location: String
+    location: Location
   }
 
   type Notification {
