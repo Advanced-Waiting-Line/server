@@ -5,8 +5,8 @@ class QueueAPI extends RESTDataSource {
       this.baseURL = 'http://localhost:3000/queueLogs/';
     }
   
-    async getAllCompanyQueue(token, id) {
-      const response = await this.get(`${id}`, null, 
+    async getAllCompanyQueue(token) {
+      const response = await this.get(``, null, 
             {
                 headers:{
                 token
@@ -41,12 +41,13 @@ class QueueAPI extends RESTDataSource {
               name: queue.problem.name
           },
           duration: queue.duration,
-          checkIn: queue.checkIn
+          checkIn: queue.checkIn,
+          status: queue.status
         }
     }
 
-    async getTodayLog(token, id) {
-        const response = await this.get(`todayLog/${id}`, null, 
+    async getTodayLog(token) {
+        const response = await this.get(`todayLog`, null, 
             {
                 headers:{
                 token
@@ -57,13 +58,13 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
-    async getOneDayLog(token, id, date, month, year){
+    async getOneDayLog(token, date, month, year){
         const payload = {
             date,
             month,
             year
         }
-        const response = await this.post(`oneDayLog/${id}`, payload, 
+        const response = await this.post(`oneDayLog`, payload, 
             {
                 headers:{
                 token
@@ -74,11 +75,11 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
-    async createQueue(token, id, userId, problemId){
+    async createQueue(token, id, problemId){
         const payload = {
             problem: problemId
         }
-        const response = await this.post(`${id}/${userId}`, payload, 
+        const response = await this.post(`${id}`, payload, 
             {
                 headers:{
                 token
@@ -86,7 +87,32 @@ class QueueAPI extends RESTDataSource {
         });        
         return this.queueReducer(response)
     }
-    
+
+    async updateDurationQueue(token, queueId, duration){
+        const payload = {
+            duration
+        }
+        const response = await this.put(`duration/${queueId}`, payload, 
+            {
+                headers:{
+                token
+            }
+        });        
+        return {
+            message : response.message
+        }
+    }
+    async removeFromQueue(token, queueId){
+        const response = await this.put(`remove/${queueId}`, null, 
+            {
+                headers: {
+                token
+            }
+        })
+        return {
+            message: response.message
+        }
+    }
   }
 
 

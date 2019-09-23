@@ -17,7 +17,7 @@ class QueueLogController {
 
   static getAllCompanyQueueLog(req,res,next){
     QueueLog.find({
-      "companyId": req.params.companyId})
+      "companyId": req.decode._id})
     .populate('problem')
     .populate('companyId')
     .populate('userId')
@@ -33,7 +33,7 @@ class QueueLogController {
     const start = new Date(today.setHours(6))
     const end = new Date( today.setHours(23))
     QueueLog.find({
-      "companyId": req.params.companyId,
+      "companyId": req.decode._id,
       "checkIn": {"$gte": start, "$lt": end}})
       .populate('problem')
     .populate('companyId')
@@ -54,7 +54,7 @@ class QueueLogController {
     const start = logDate.setHours(7)
     const end = logDate.setHours(23)
     QueueLog.find({
-      "companyId": req.params.companyId,
+      "companyId": req.decode._id,
       "checkIn": {"$gte": start, "$lt": end}})
     .populate('problem')
     .populate('companyId')
@@ -70,13 +70,15 @@ class QueueLogController {
   }
   
   static async create(req,res,next){
-   
+    console.log(req.params)
     try{
       //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
-        companyId: req.decode._id
+        companyId: req.params.companyId
       })
+
+      console.log(foundProblem)
       if(!foundProblem){
         next({
           code: 404,
@@ -90,7 +92,7 @@ class QueueLogController {
       //handle company
 
       const currentCompany = await Company.findOne({
-        _id: req.decode._id
+        _id: req.params.companyId
       })
       //handle open & close time
       let today = new Date()
@@ -162,8 +164,8 @@ class QueueLogController {
         })
       }
       
-      const companyId = req.decode._id
-      const userId = req.params.userId
+      const companyId = req.params.companyId
+      const userId = req.decode._id
         
       const newData = {
         companyId,
@@ -219,25 +221,34 @@ class QueueLogController {
         _id: req.params.queueLogId
       })
       let currentCheckIn = new Date(currentQueue.checkIn)    
-  
+      
       const end = new Date(currentCheckIn.getTime())
       end.setHours(23)
       const nextQueue = await QueueLog
-        .find({
-          companyId: req.decode._id,
-          checkIn: {"$gte": currentCheckIn, "$lt": end}
-        })         
-        
-      nextQueue.forEach( async queue => {
-        await QueueLog.updateOne({
-          _id : queue._id
-        },{
-          $set:{ 
-            checkIn: new Date(queue.checkIn.getTime() + (duration*60000))
-          }
-        })
-      });
-  
+      .find({
+        companyId: req.decode._id,
+        checkIn: {"$gt": currentCheckIn, "$lt": end}
+      })         
+      
+      if(nextQueue.length > 0){
+        console.log('dapat next')
+        nextQueue.forEach( async queue => {
+          await QueueLog.updateOne({
+            _id : queue._id
+          },{
+            $set:{ 
+              checkIn: new Date(queue.checkIn.getTime() + (duration*60000))
+            }
+          })
+        });
+      }
+      const addedDuration = await QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $inc:{
+          duration: duration
+        }
+      }) 
       res.status(200).json({
         message: "duration updated"
       })
@@ -284,22 +295,30 @@ class QueueLogController {
       }
       console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
       console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
-      
-      
+
+      const currentEnd = new Date(currentCheckIn.getTime() + (currentQueue.problem.duration*60000))
+      console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
+
+
       if(nextQueue.length > 0){
         let currentTime = new Date()
         if(currentTime >= currentCheckIn){
-          let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
-          console.log(adjustingTime, "adjusting")
-          nextQueue.forEach( async queue => {
-            await QueueLog.updateOne({
-              _id : queue._id
-            },{
-              $set:{ 
-                checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
-              }
-            })
-          });
+          if(currentTime >= currentEnd){
+            
+          } else {
+            let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
+            console.log(adjustingTime, "adjusting")
+            nextQueue.forEach( async queue => {
+              await QueueLog.updateOne({
+                _id : queue._id
+              },{
+                $set:{ 
+                  checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
+                }
+              })
+            });
+
+          }
         } else {
           const duration = currentQueue.problem.duration
 
