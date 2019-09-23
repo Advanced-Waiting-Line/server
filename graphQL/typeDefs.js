@@ -25,6 +25,9 @@ const typeDefs = gql`
       companyId: String
     )
     :[Problem]
+    getQueueByUserId(
+      token: String
+    ): [QueueLog]
   }
   type Company {
     ${'_id'}: String,

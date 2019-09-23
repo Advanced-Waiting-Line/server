@@ -75,6 +75,20 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
+    async getQueueByUserId(token){
+        const response = await this.get(`user`, null,
+            {
+                headers:{
+                token
+            }
+        });
+
+        console.log(response)
+
+        let result = response.map(queue=> this.queueReducer(queue))
+        return result
+    }
+
     async createQueue(token, id, problemId){
         const payload = {
             problem: problemId
