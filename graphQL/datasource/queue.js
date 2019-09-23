@@ -113,6 +113,18 @@ class QueueAPI extends RESTDataSource {
             message: response.message
         }
     }
+
+    async updateStatus(token, queueId){
+        const response = await this.put(`status/${queueId}`, null, 
+            {
+                headers: {
+                token
+            }
+        })
+        return {
+            message: response.message
+        }
+    }   
   }
 
 

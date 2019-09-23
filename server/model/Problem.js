@@ -9,6 +9,9 @@ const problemSchema = new Schema({
     name: {
         type: String
     },
+    description:{
+        type: String
+    },
     duration: {
         type: Number
     }
