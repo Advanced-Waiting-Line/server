@@ -17,10 +17,15 @@ const resolvers = {
       const result = await dataSources.queueAPI.getOneDayLog(token, date, month, year)
       return result  
     },
+    getQueueByUserId: async (_, {token}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getQueueByUserId(token)
+      return result  
+    },
     getCompanyProblem: async (_,{companyId}, { dataSources }) => {
       const result = await dataSources.problemAPI.getCompanyProblem(companyId)
       return result  
     },
+
   },
   Mutation: {
     registerCompany: async (parent, { openTime, closeTime, image, location, email, password }, context, info) => {      

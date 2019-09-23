@@ -68,6 +68,18 @@ class QueueLogController {
     })
     
   }
+
+  static getQueueByUserId(req,res,next){
+    QueueLog.find({
+      userId: req.decode._id
+    })
+    .populate('problem')
+    .populate('companyId')
+    .then(result=>{
+      res.json(result)
+    })
+    .catch(next)
+  }
   
   static async create(req,res,next){
     console.log(req.params)
