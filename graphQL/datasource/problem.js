@@ -11,10 +11,11 @@ class ProblemAPI extends RESTDataSource {
         return result
     }
 
-    async createProblem(token, name, duration){
+    async createProblem(token, name, duration, description){
         const payload = {
             name,
-            duration
+            duration,
+            description
         }
         const response = await this.post(``,payload, {
             headers: {
@@ -53,13 +54,6 @@ class ProblemAPI extends RESTDataSource {
     problemReducer(problem){
         return {
             _id: problem._id,
-            companyId: {
-                _id: problem.companyId._id,
-                openTime: problem.companyId.openTime,
-                closeTime: problem.companyId.closeTime,
-                location: problem.companyId.location,
-                queue: problem.companyId.queue
-              },
           name: problem.name,
           duration: problem.duration,
         }

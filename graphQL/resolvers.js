@@ -17,9 +17,8 @@ const resolvers = {
       const result = await dataSources.queueAPI.getOneDayLog(token, date, month, year)
       return result  
     },
-    getCompanyProblem: async (_,{}, { dataSources }) => {
-      const result = await dataSources.problemAPI.getCompanyProblem()
-      console.log(result)
+    getCompanyProblem: async (_,{companyId}, { dataSources }) => {
+      const result = await dataSources.problemAPI.getCompanyProblem(companyId)
       return result  
     },
   },
@@ -111,8 +110,8 @@ const resolvers = {
 
     //problem
     
-    createProblem: async (_,{token, name, duration}, { dataSources }) => {
-      const result = await dataSources.problemAPI.createProblem(token, name, duration)
+    createProblem: async (_,{token, name, duration, description}, { dataSources }) => {
+      const result = await dataSources.problemAPI.createProblem(token, name, duration, description)
       console.log(result)
       return result  
     },

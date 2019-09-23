@@ -71,7 +71,6 @@ const typeDefs = gql`
   
   type Problem{
     _id: String
-    companyId: Company
     name: String
     duration: Int
   },
@@ -148,6 +147,7 @@ const typeDefs = gql`
     createProblem(
       token: String
       name: String
+      description: String
       duration: Int
     ):Problem
     deleteProblem(

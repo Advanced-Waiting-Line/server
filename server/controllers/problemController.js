@@ -30,6 +30,7 @@ class ProblemController {
     Problem.create({
       name,
       duration,
+      description,
       companyId
     }).then(problem =>{
       res.status(201).json(problem)
