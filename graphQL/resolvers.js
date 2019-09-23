@@ -25,6 +25,14 @@ const resolvers = {
       const result = await dataSources.problemAPI.getCompanyProblem(companyId)
       return result  
     },
+    getAllCompany: async (_,{}, { dataSources }) => {
+      const result = await dataSources.companyAPI.getAllCompany()
+      return result
+    },
+    findOneUser: async (_,{userId}, { dataSources }) => {
+      const result = await dataSources.userAPI.findOneUser(userId)
+      return result
+    },
 
   },
   Mutation: {
