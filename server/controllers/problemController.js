@@ -15,6 +15,7 @@ class ProblemController {
     Problem.find({
       companyId: req.params.companyId
     })
+    .populate('companyId')
     .then(problems=>{
       res.json(problems)
     })

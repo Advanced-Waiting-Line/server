@@ -33,6 +33,7 @@ const typeDefs = gql`
     ${'_id'}: String,
     openTime : String,
     closeTime: String,
+    image: String,
     location: String,
     email: String,
     password: String,
@@ -57,15 +58,15 @@ const typeDefs = gql`
   },
   type QueueLog{
     _id: String,
-    companyId: String,
-    userId: String,
-    problem: String,
+    companyId: Company,
+    userId: User,
+    problem: Problem,
     duration: Int,
     checkIn: String,
   },
   type Problem{
     _id: String,
-    companyId: String,
+    companyId: Company,
     name: String,
     duration: Int
   }

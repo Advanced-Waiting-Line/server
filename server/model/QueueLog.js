@@ -8,7 +8,7 @@ const queueLogSchema = new Schema({
     },
     userId: {
         type: Schema.Types.ObjectId,
-        ref: 'Company'
+        ref: 'User'
     },
     problem: {
         type: Schema.Types.ObjectId,
