@@ -30,13 +30,13 @@ const typeDefs = gql`
     :[Problem]
   }
   type Company {
-    _id: String
-    openTime: String
-    closeTime: String
-    image: String
-    location: String
-    email: String
-    password: String
+    ${'_id'}: String,
+    openTime : String,
+    closeTime: String,
+    image: String,
+    location: Location,
+    email: String,
+    password: String,
     queue: [String]
   }
 
@@ -73,17 +73,25 @@ const typeDefs = gql`
     companyId: Company
     name: String
     duration: Int
-  }
-  
+  },
+  type Location {
+    lat: Float,
+    lng: Float
+  },
+  input InputLocation {
+    lat: Float,
+    lng: Float
+  },
+
   type Mutation {
     registerCompany(
-      openTime: String
-      closeTime: String
-      location: String
-      image: String
-      email: String
-      password: String
-    ): Company
+      openTime: String,
+      closeTime: String,
+      location: InputLocation,
+      image: String,
+      email: String,
+      password: String,
+    ): Company,
     loginCompany(
       email: String
       password: String
