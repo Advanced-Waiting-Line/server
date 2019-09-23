@@ -11,6 +11,7 @@ router.post('/oneDayLog/:companyId', queueLogController.getOneDayLog)
 router.post('/:companyId/:userId', authorizationCompany, queueLogController.create)
 router.put('/duration/:queueLogId',queueLogController.updateDuration)
 router.put('/remove/:queueLogId', queueLogController.removeFromQueue)
+router.put('/status/:queueLogId', queueLogController.updateStatus)
 
 
 
