@@ -105,7 +105,7 @@ const typeDefs = gql`
       image: String
       email: String
       password: String
-      location: String
+      location: InputLocation
     ): User
     loginUser(
       email: String
@@ -118,7 +118,7 @@ const typeDefs = gql`
       image: String
       email: String
       password: String
-      location: String
+      location: InputLocation
     ): Notification
     deleteUser(
       userId: String
