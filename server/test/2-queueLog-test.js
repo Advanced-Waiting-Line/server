@@ -10,9 +10,13 @@ after(function(done){
   console.log('database QueueLog cleared')
   clearDatabase(done)
 })
-let idUser
-let idCompany
 
+let userId
+let userToken
+let companyId
+let companyToken
+
+// Get Id User
 describe('POST /users/register', function(){
   this.timeout(10000)
   it('Success register with status 201', function (done){
@@ -29,7 +33,7 @@ describe('POST /users/register', function(){
     .post('/users/register')
     .send(user)
     .end(function(err,res){
-      idUser = res.body._id
+      userId = res.body._id
       expect(err).to.be.null
       expect(res).to.have.status(201)
       expect(res.body).to.be.an("object")
@@ -40,6 +44,7 @@ describe('POST /users/register', function(){
   })
 })
 
+// Get Id Company
 describe('POST /companies/register', function(){
   this.timeout(10000)
   it('Sucess register company with status 201', function (done){
@@ -57,7 +62,7 @@ describe('POST /companies/register', function(){
     .post('/companies/register')
     .send(company)
     .end(function(err,res){
-      idCompany = res.body._id
+      companyId = res.body._id
       expect(err).to.be.null
       expect(res).to.have.status(201)
       expect(res.body).to.be.an("object")
@@ -69,10 +74,33 @@ describe('POST /companies/register', function(){
   })
 })
 
+//========== Get Company Token ==========
+describe("POST /companies/login", function () {
+  this.timeout(10000)
+  it("Success login company with status 200", function (done) {
+    let company = {
+      email: "abcd@mail.com",
+      password: "qwerqwer"
+    };
+    chai
+      .request(app)
+      .post("/companies/login")
+      .send(company)
+      .end(function (err, res) {
+        companyToken = res.body.token
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("_id", "token", "email")
+        done();
+      })
+  })
+})
+
 //========== QueueLog Test ==========
 describe(`queue test`, function(){
+  this.timeout(10000)
   describe('GET /queueLogs/', function(){
-    this.timeout(10000)
     it('Success get all queueLog data with status 200', function (done){
       chai
       .request(app)
@@ -86,30 +114,75 @@ describe(`queue test`, function(){
     })
   })
 
-  // describe('GET /queueLogs/', function(){
-  //   it('Success get all queueLog data with status 200', function (done){
-  //     let logDate = new Date()
-  //     logDate.setDate(req.body.date)
-  //     logDate.setMonth(req.body.month)
-  //     logDate.setFullYear(req.body.year)
-      
-  //     chai
-  //     .request(app)
-  //     .get('/users/register')
-  //     .send(user)
-  //     .end(function(err,res){
-  //       idUser = res.body._id
-  //       expect(err).to.be.null
-  //       expect(res).to.have.status(201)
-  //       expect(res.body).to.be.an("object")
-  //       // expect(res.body.firstName).to.equal("lorem")
-  //       expect(res.body.lastName).to.equal("ipsum")
-  //       expect(res.body.email).to.equal("qwer@mail.com")
-  //       expect(res.body.password).to.not.equal("qwerqwer")
-  //       expect(res.body).to.have.keys(['_id', 'firstName', 'lastName', 'email', "password", "createdAt", "updatedAt", "__v"])
-  //       done()
-  //     })
-  //   })
-  // })
+  describe('GET /queueLogs/:companyId', function(){
+    it('Success get all queueLog based on companyId with status 200', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs/${companyId}`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("array")
+        done()
+      })
+    })
+  })
+
+  describe('GET /queueLogs/todayLog/:companyId', function(){
+    it('Success get all queueLog for today based on companyId with status 200', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs/todayLog/${companyId}`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("array")
+        done()
+      })
+    })
+  })
+
+  describe('POST /queueLogs/oneDayLog/:companyId', function(){
+    it('Success get all queueLog for based on date and companyId with status 200', function (done){
+      let date = {
+        date: "23",
+        month: "8",
+        year: "2019"
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/oneDayLog/${companyId}`)
+      .send(date)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("array")
+        done()
+      })
+    })
+  })
+
+  describe('POST /queueLogs/:companyId/:userId', function(){
+    it('Create queueLog with status 200', function (done){
+
+      let input = {
+        problem: "23", // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${companyId}/:userId/`)
+      .send(input)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("array")
+        done()
+      })
+    })
+  })
 
 })
