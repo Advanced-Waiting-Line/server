@@ -12,6 +12,7 @@ class QueueAPI extends RESTDataSource {
                 token
             }
         });
+        console.log(response) 
         let result = response.map(queue=> this.queueReducer(queue))
         return result
     }
@@ -19,9 +20,26 @@ class QueueAPI extends RESTDataSource {
     queueReducer(queue){
         return {
             _id: queue._id,
-          companyId: queue.companyId,
-          userId: queue.userId,
-          problem: queue.problem,
+          companyId: {
+            _id: queue.companyId._id,
+            openTime: queue.companyId.openTime,
+            closeTime: queue.companyId.closeTime,
+            location: queue.companyId.location,
+            queue: queue.companyId.queue
+          },
+          userId: {
+              _id: queue.userId._id,
+              firstName: queue.userId.firstName,
+              lastName: queue.userId.lastName,
+              email: queue.userId.email,
+              location: queue.userId.location
+          },
+          problem: {
+              _id: queue.problem._id,
+              companyId: queue.problem.companyId,
+              duration: queue.problem.duration,
+              name: queue.problem.name
+          },
           duration: queue.duration,
           checkIn: queue.checkIn
         }

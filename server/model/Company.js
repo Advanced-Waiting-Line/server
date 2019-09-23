@@ -16,9 +16,8 @@ let CompanySchema = new Schema ({
     
   },
   location: {
-    lattitude: {
-      type: String
-    },
+    type: Object,
+    required: [true, 'location cannot be empty']
   },
   email: {
     type: String,
@@ -52,9 +51,12 @@ let CompanySchema = new Schema ({
     minlength:[8,"Password minimum length is 8"],
     required: [true, 'password cannot be empty']
   },
-  queue: {
-    type: Array
-  },
+  queue: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'QueueLog'
+    }
+  ]
 },{timestamps: true})
 
 CompanySchema.pre('save', function(next){

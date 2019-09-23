@@ -47,7 +47,7 @@ let UserSchema = new Schema ({
     required: [true, 'password cannot be empty']
   },
   location: {
-    type: String,
+    type: Object,
     required: [true, 'location cannot be empty']
   },
 },{timestamps: true})
