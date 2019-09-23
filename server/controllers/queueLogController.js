@@ -68,22 +68,6 @@ class QueueLogController {
     })
     
   }
-  static addDuration(req,res,next){
-    Queue.findOneAndUpdate({ _id: req.params.id }, { $inc: { duration: req.body.increment } }, {new: true })
-      .then(queue=>{
-          if(queue){
-            res.json({
-                queue
-            })
-          } else {
-              next({
-                  status: 404,
-                  message: 'Queue Not Found'
-              })
-          }
-      })
-  }
-
   
   static async create(req,res,next){
    
@@ -151,17 +135,22 @@ class QueueLogController {
           checkIn.setSeconds(0)
         }
       } else {
-        let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
-        if(latestSolved > closeTime ){
-          next({
-            code: 403,
-            message: "the queue already beyond closing time"
-          })
+        today = new Date()
+        if(lastQueue.checkIn < today){
+          checkIn = delayCheckIn(today, 30)
+        }else {
+          let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
+          console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
+          if(latestSolved > closeTime ){
+            next({
+              code: 403,
+              message: "the queue already beyond closing time"
+            })
+          }
+          checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
         }
-        checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
         
       console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
-      console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
       }   
 
       today = new Date()
@@ -261,9 +250,6 @@ class QueueLogController {
 
   static async removeFromQueue(req,res,next){
     try{
-
-      console.log(req.decode._id)
-
       const removedQueue = await Company.updateOne({
         _id: req.decode._id
       },{
@@ -273,51 +259,64 @@ class QueueLogController {
       })
 
 
-      // const currentQueue = await QueueLog.findOne({
-      //   _id: req.params.queueLogId
-      // })
+      const currentQueue = await QueueLog.findOne({
+        _id: req.params.queueLogId
+      })
+      .populate('problem')
 
-      // let currentCheckIn = new Date(currentQueue.checkIn)    
+      let currentCheckIn = new Date(currentQueue.checkIn)    
       
       
-      // const end = new Date(currentCheckIn.getTime())
-      // end.setHours(23)
-      // const nextQueue = await QueueLog
-      //   .find({
-      //       companyId: req.decode._id,
-      //       checkIn: {"$gt": currentCheckIn, "$lt": end}
-      // })    
-      // console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
-      // console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
-      // console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
-      // let today = new Date()
-      // let adjusted = new Date(nextQueue[0].checkIn - ((nextQueue[0].checkIn.getTime()) - today))
-      // console.log(adjusted)
-      // console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
-      
-      
-      // if(nextQueue.length > 0){
-      //   let currentTime = new Date()
-      //   if(currentTime >= currentCheckIn){
-      //     let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
-      //     console.log(adjustingTime, "adjusting")
-      //     nextQueue.forEach( async queue => {
-      //       await QueueLog.updateOne({
-      //         _id : queue._id
-      //       },{
-      //         $set:{ 
-      //           checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
-      //         }
-      //       })
-      //     });
-      //   } else {
+      const end = new Date(currentCheckIn.getTime())
+      end.setHours(23)
+      const nextQueue = await QueueLog
+        .find({
+            companyId: req.decode._id,
+            checkIn: {"$gt": currentCheckIn, "$lt": end}
+      })    
 
-      //   }
-        
-      // }
-     
+      if(nextQueue.length > 0){
+        console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
+        let today = new Date()
+        let adjusted = new Date(nextQueue[0].checkIn - ((nextQueue[0].checkIn.getTime()) - today))
+        console.log(adjusted)
+        console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
+      }
+      console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
+      console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
+      
+      
+      if(nextQueue.length > 0){
+        let currentTime = new Date()
+        if(currentTime >= currentCheckIn){
+          let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
+          console.log(adjustingTime, "adjusting")
+          nextQueue.forEach( async queue => {
+            await QueueLog.updateOne({
+              _id : queue._id
+            },{
+              $set:{ 
+                checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
+              }
+            })
+          });
+        } else {
+          const duration = currentQueue.problem.duration
 
-  
+          const end = new Date(currentCheckIn.getTime())
+          end.setHours(23)
+
+          nextQueue.forEach( async queue => {
+            await QueueLog.updateOne({
+              _id : queue._id
+            },{
+              $set:{ 
+                checkIn: new Date(queue.checkIn.getTime() - (duration*60000))
+              }
+            })  
+          });
+        }        
+      }   
       res.status(200).json({
         message: "queue removed from list"
       })
@@ -325,8 +324,30 @@ class QueueLogController {
     } catch(err){
       next(err)
     }
+  }
 
+  static async updateStatus(req,res,next){
+    const currentQueue = QueueLog.findOne({
+      _id: req.params.queueLogId
+    })
 
+    if(currentQueue){
+      QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $set:{
+          status: !currentQueue.status
+        }
+      })
+      .then(result=>{
+        res.json(result)
+      })
+    } else {
+      next({
+        code: 404,
+        message: 'Queue not found'
+      })
+    }
   }
 
   
