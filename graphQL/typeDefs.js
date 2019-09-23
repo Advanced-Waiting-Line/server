@@ -128,7 +128,6 @@ const typeDefs = gql`
     createQueue(
       token: String 
       companyId: String
-      userId:String
       problemId: String)
     :QueueLog
     updateDurationQueue(

@@ -75,11 +75,11 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
-    async createQueue(token, id, userId, problemId){
+    async createQueue(token, id, problemId){
         const payload = {
             problem: problemId
         }
-        const response = await this.post(`${id}/${userId}`, payload, 
+        const response = await this.post(`${id}`, payload, 
             {
                 headers:{
                 token

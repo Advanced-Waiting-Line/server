@@ -70,12 +70,12 @@ class QueueLogController {
   }
   
   static async create(req,res,next){
-    console.log(req.decode)
+    console.log(req.params)
     try{
       //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
-        companyId: req.decode._id
+        companyId: req.params.companyId
       })
 
       console.log(foundProblem)
@@ -92,7 +92,7 @@ class QueueLogController {
       //handle company
 
       const currentCompany = await Company.findOne({
-        _id: req.decode._id
+        _id: req.params.companyId
       })
       //handle open & close time
       let today = new Date()
@@ -164,8 +164,8 @@ class QueueLogController {
         })
       }
       
-      const companyId = req.decode._id
-      const userId = req.params.userId
+      const companyId = req.params.companyId
+      const userId = req.decode._id
         
       const newData = {
         companyId,
