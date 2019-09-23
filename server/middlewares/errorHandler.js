@@ -1,5 +1,9 @@
 module.exports = function (err, req, res, next){
+<<<<<<< HEAD
   console.log('masuk error handling')
+=======
+  // console.log('masuk error handling')
+>>>>>>> 5c6fa63d816a463b4a8de02b2035357e24ed3a92
   console.log(err)
 
   if (err.name === "ValidationError"){
