@@ -66,22 +66,6 @@ class QueueLogController {
     })
     
   }
-  static addDuration(req,res,next){
-    Queue.findOneAndUpdate({ _id: req.params.id }, { $inc: { duration: req.body.increment } }, {new: true })
-      .then(queue=>{
-          if(queue){
-            res.json({
-                queue
-            })
-          } else {
-              next({
-                  status: 404,
-                  message: 'Queue Not Found'
-              })
-          }
-      })
-  }
-
   
   static async create(req,res,next){
    
@@ -264,9 +248,6 @@ class QueueLogController {
 
   static async removeFromQueue(req,res,next){
     try{
-
-      console.log(req.decode._id)
-
       const removedQueue = await Company.updateOne({
         _id: req.decode._id
       },{
@@ -332,12 +313,8 @@ class QueueLogController {
               }
             })  
           });
-        }
-        
-      }
-     
-
-  
+        }        
+      }   
       res.status(200).json({
         message: "queue removed from list"
       })
@@ -345,8 +322,30 @@ class QueueLogController {
     } catch(err){
       next(err)
     }
+  }
 
+  static async updateStatus(req,res,next){
+    const currentQueue = QueueLog.findOne({
+      _id: req.params.queueLogId
+    })
 
+    if(currentQueue){
+      QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $set:{
+          status: !currentQueue.status
+        }
+      })
+      .then(result=>{
+        res.json(result)
+      })
+    } else {
+      next({
+        code: 404,
+        message: 'Queue not found'
+      })
+    }
   }
 
   
