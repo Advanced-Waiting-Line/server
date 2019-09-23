@@ -10,16 +10,13 @@ const typeDefs = gql`
     user (id: String): User
     queueLog: QueueLog
     getAllCompanyQueue(
-      token: String
-      companyId: String)
+      token: String)
     : [QueueLog]
     getTodayLog(
-      token: String 
-      companyId: String)
+      token: String)
     : [QueueLog]
     getOneDayLog(
-      token: String 
-      companyId: String
+      token: String
       date: Int
       month: Int
       year: Int)
@@ -66,6 +63,10 @@ const typeDefs = gql`
     problem: Problem
     duration: Int
     checkIn: String
+    status: Boolean
+  }
+  type UpdateResult{
+    message: String
   }
   
   type Problem{
@@ -127,9 +128,13 @@ const typeDefs = gql`
     createQueue(
       token: String 
       companyId: String
-      userId:String
       problemId: String)
     :QueueLog
+    updateDurationQueue(
+      token: String
+      queueId: String
+      duration: Int
+    ):UpdateResult
   #problem
     
     createProblem(
