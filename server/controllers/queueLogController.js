@@ -346,7 +346,7 @@ class QueueLogController {
   }
 
   static async updateStatus(req,res,next){
-    const currentQueue = QueueLog.findOne({
+    const currentQueue = await QueueLog.findOne({
       _id: req.params.queueLogId
     })
 

@@ -139,6 +139,10 @@ const typeDefs = gql`
       token: String
       queueId:String
     ):UpdateResult
+    updateStatus(
+      token:String
+      queueId:String
+    ):UpdateResult
   #problem
     
     createProblem(

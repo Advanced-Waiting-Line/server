@@ -104,6 +104,11 @@ const resolvers = {
       return result  
     },
 
+    updateStatus: async (_, {token, queueId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.updateStatus(token, queueId)
+      return result  
+    },
+
     //problem
     
     createProblem: async (_,{token, name, duration}, { dataSources }) => {
