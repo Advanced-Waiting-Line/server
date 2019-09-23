@@ -54,7 +54,6 @@ const resolvers = {
       return data
     },
     registerUser: async (parent, { firstName, lastName, image, email, password, location }, context, info) => {
-      // console.log({ firstName, lastName, image, email, password, location })
       let input = {}
       firstName && (input.firstName = firstName)
       lastName && (input.lastName = lastName)
@@ -62,7 +61,6 @@ const resolvers = {
       email && (input.email = email)
       password && (input.password = password)
       location && (input.location = location)
-
       const { data } = await axios.post(`${awanUrl}/users/register`, input)
       return data
     },
