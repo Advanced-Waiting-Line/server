@@ -60,6 +60,8 @@ class QueueLogController {
     .populate('companyId')
     .populate('userId')
     .then(queues=>{
+      console.log('dari controller')
+      console.log(queues)
       res.json(queues)
     }).catch(err=>{
       next(err)
