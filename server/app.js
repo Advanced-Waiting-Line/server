@@ -21,7 +21,12 @@ if (process.env.NODE_ENV=='test'){
   })
 }
 else {
-  mongoose.connect(`mongodb+srv://mongodb:${process.env.MONGODB}@cluster0-qtldw.gcp.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
+  // mongoose.connect(`mongodb+srv://mongodb:${process.env.MONGODB}@cluster0-qtldw.gcp.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
+  // {useNewUrlParser: true, useUnifiedTopology: true}, function(err){
+  //   if (err) throw err
+  //   else console.log('mongoose connected to mongodb atlas')
+  // })
+  mongoose.connect(`mongodb+srv://admin:admin@master-cluster-nwspo.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
   {useNewUrlParser: true, useUnifiedTopology: true}, function(err){
     if (err) throw err
     else console.log('mongoose connected to mongodb atlas')
@@ -32,6 +37,7 @@ else {
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cors())
+app.use(require('morgan')('dev'));
 
 //routes and error handling
 app.use('/', route)

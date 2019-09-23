@@ -34,7 +34,7 @@ const typeDefs = gql`
     openTime : String,
     closeTime: String,
     image: String,
-    location: String,
+    location: Location,
     email: String,
     password: String,
     queue: [String]
@@ -46,7 +46,7 @@ const typeDefs = gql`
     image: String,
     email: String,
     password: String,
-    location: String
+    location: Location
   },
   type Notification {
     token: String,
@@ -69,13 +69,21 @@ const typeDefs = gql`
     companyId: Company,
     name: String,
     duration: Int
-  }
-  ,
+  },
+  type Location {
+    lat: Float,
+    lng: Float
+  },
+  input InputLocation {
+    lat: Float,
+    lng: Float
+  },
+
   type Mutation {
     registerCompany(
       openTime: String,
       closeTime: String,
-      location: String,
+      location: InputLocation,
       image: String,
       email: String,
       password: String,

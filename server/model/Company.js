@@ -16,8 +16,14 @@ let CompanySchema = new Schema ({
     
   },
   location: {
-    type: Object,
-    required: [true, 'location cannot be empty']
+    lat: {
+      type: Object,
+      required: [true, 'latitude cannot be empty']
+    },
+    lng: {
+      type: Object,
+      required: [true, 'longitude cannot be empty']  
+    }
   },
   email: {
     type: String,
