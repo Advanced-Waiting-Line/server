@@ -4,20 +4,21 @@ const FormData = require('form-data')
 
 const resolvers = {
   Query: {
-    getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
-      const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
+    getAllCompanyQueue:  async (_,{token}, { dataSources }) => {
+      const result = await dataSources.queueAPI.getAllCompanyQueue(token)
       return result  
     },
-    getTodayLog: async (_, {token, companyId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getTodayLog(token, companyId)
+    getTodayLog: async (_, {token}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getTodayLog(token)
+      console.log(result)
       return result  
     },
-    getOneDayLog: async (_, {token, companyId, date, month, year}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getOneDayLog(token, companyId, date, month, year)
+    getOneDayLog: async (_, {token, date, month, year}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getOneDayLog(token, date, month, year)
       return result  
     },
-    getCompanyProblem: async (_,{companyId}, { dataSources }) => {
-      const result = await dataSources.problemAPI.getCompanyProblem(companyId)
+    getCompanyProblem: async (_,{}, { dataSources }) => {
+      const result = await dataSources.problemAPI.getCompanyProblem()
       console.log(result)
       return result  
     },
@@ -90,6 +91,11 @@ const resolvers = {
     
     createQueue: async (_, {token, companyId, userId, problemId}, {dataSources}) => {
       const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
+      return result  
+    },
+
+    updateDurationQueue: async (_, {token, queueId, duration}, {dataSources}) => {
+      const result = await dataSources.queueAPI.updateDurationQueue(token, queueId, duration)
       return result  
     },
 

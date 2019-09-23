@@ -17,7 +17,7 @@ class QueueLogController {
 
   static getAllCompanyQueueLog(req,res,next){
     QueueLog.find({
-      "companyId": req.params.companyId})
+      "companyId": req.decode._id})
     .populate('problem')
     .populate('companyId')
     .populate('userId')
@@ -33,7 +33,7 @@ class QueueLogController {
     const start = new Date(today.setHours(6))
     const end = new Date( today.setHours(23))
     QueueLog.find({
-      "companyId": req.params.companyId,
+      "companyId": req.decode._id,
       "checkIn": {"$gte": start, "$lt": end}})
       .populate('problem')
     .populate('companyId')
@@ -54,7 +54,7 @@ class QueueLogController {
     const start = logDate.setHours(7)
     const end = logDate.setHours(23)
     QueueLog.find({
-      "companyId": req.params.companyId,
+      "companyId": req.decode._id,
       "checkIn": {"$gte": start, "$lt": end}})
     .populate('problem')
     .populate('companyId')
@@ -68,13 +68,15 @@ class QueueLogController {
   }
   
   static async create(req,res,next){
-   
+    console.log(req.decode)
     try{
       //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
         companyId: req.decode._id
       })
+
+      console.log(foundProblem)
       if(!foundProblem){
         next({
           code: 404,
@@ -217,25 +219,34 @@ class QueueLogController {
         _id: req.params.queueLogId
       })
       let currentCheckIn = new Date(currentQueue.checkIn)    
-  
+      
       const end = new Date(currentCheckIn.getTime())
       end.setHours(23)
       const nextQueue = await QueueLog
-        .find({
-          companyId: req.decode._id,
-          checkIn: {"$gte": currentCheckIn, "$lt": end}
-        })         
-        
-      nextQueue.forEach( async queue => {
-        await QueueLog.updateOne({
-          _id : queue._id
-        },{
-          $set:{ 
-            checkIn: new Date(queue.checkIn.getTime() + (duration*60000))
-          }
-        })
-      });
-  
+      .find({
+        companyId: req.decode._id,
+        checkIn: {"$gt": currentCheckIn, "$lt": end}
+      })         
+      
+      if(nextQueue.length > 0){
+        console.log('dapat next')
+        nextQueue.forEach( async queue => {
+          await QueueLog.updateOne({
+            _id : queue._id
+          },{
+            $set:{ 
+              checkIn: new Date(queue.checkIn.getTime() + (duration*60000))
+            }
+          })
+        });
+      }
+      const addedDuration = await QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $inc:{
+          duration: duration
+        }
+      }) 
       res.status(200).json({
         message: "duration updated"
       })
