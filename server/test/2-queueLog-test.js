@@ -15,11 +15,12 @@ let userId
 let userToken
 let companyId
 let companyToken
+let problemId
 
 // Get Id User
 describe.only('POST /users/register', function(){
   this.timeout(10000)
-  it('Success register with status 201', function (done){
+  it('Success register user with status 201', function (done){
     let user = {
       firstName: "lorem ",
       lastName: "ipsum",
@@ -80,6 +81,31 @@ describe.only('POST /companies/register', function(){
   })
 })
 
+// Get Token User
+describe.only("POST /users/login", function () {
+  this.timeout(10000)
+  it("Success login with status 200", function (done) {
+    let user = {
+      email: "abcd@mail.com",
+      password: "qwerqwer"
+    };
+    chai
+      .request(app)
+      .post("/users/login")
+      .send(user)
+      .end(function (err, res) {
+        userToken = res.body.token
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("_id","email", "token")
+        done();
+      })
+  })
+})
+
+
+
 //========== Get Company Token ==========
 describe.only("POST /companies/login", function () {
   this.timeout(10000)
@@ -104,50 +130,53 @@ describe.only("POST /companies/login", function () {
 })
 
 //========== Create Problem ==========
-// describe.only("POST /problems", function () {
-//   this.timeout(10000)
-//   it("Success login company with status 200", function (done) {
-//     let input = {
-//       name: "abcd@mail.com",
-//       duration: "qwerqwer"
-//     };
-//     chai
-//       .request(app)
-//       .post("/problems")
-//       .send(input)
-//       .end(function (err, res) {
-//         companyToken = res.body.token
-//         expect(err).to.be.null;
-//         expect(res).to.have.status(200);
-//         expect(res.body).to.be.an("object")
-//         expect(res.body).to.have.keys("_id", "token", "email")
-//         done();
-//       })
-//   })
-// })
+describe.only("POST /problems", function () {
+  this.timeout(10000)
+  it("Success create prolem with status 201", function (done) {
+    let input = {
+      name: "abcd@mail.com",
+      duration: 2
+    };
+    chai
+      .request(app)
+      .post("/problems")
+      .set('token', companyToken)
+      .send(input)
+      .end(function (err, res) {
+        problemId =  res.body._id
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("_id", "name", "duration", "companyId", "__v")
+        done();
+      })
+  })
+})
 
 //========== QueueLog Test ==========
 describe.only(`queue test`, function(){
   this.timeout(10000)
-  describe('GET /queueLogs/', function(){
-    it('Success get all queueLog data with status 200', function (done){
-      chai
-      .request(app)
-      .get('/queueLogs/')
-      .end(function(err,res){
-        expect(err).to.be.null
-        expect(res).to.have.status(200)
-        expect(res.body).to.be.an("array")
-        done()
-      })
-    })
-  })
+  // describe('GET /queueLogs/', function(){
+  //   it('Success get all queueLog data with status 200', function (done){
+  //     console.log('ini tokennya', companyToken)
+  //     chai
+  //     .request(app)
+  //     .set('token', companyToken)
+  //     .get('/queueLogs/')
+  //     .end(function(err,res){
+  //       // expect(err).to.be.null
+  //       // expect(res).to.have.status(200)
+  //       // expect(res.body).to.be.an("array")
+  //       done()
+  //     })
+  //   })
+  // })
 
-  describe('GET /queueLogs/:companyId', function(){
+  describe('GET /queueLogs', function(){
     it('Success get all queueLog based on companyId with status 200', function (done){
       chai
       .request(app)
-      .get(`/queueLogs/${companyId}`)
+      .get(`/queueLogs`)
       .set('token', companyToken)
       .end(function(err,res){
         expect(err).to.be.null
@@ -158,11 +187,11 @@ describe.only(`queue test`, function(){
     })
   })
 
-  describe('GET /queueLogs/todayLog/:companyId', function(){
+  describe('GET /queueLogs/todayLog', function(){
     it('Success get all queueLog for today based on companyId with status 200', function (done){
       chai
       .request(app)
-      .get(`/queueLogs/todayLog/${companyId}`)
+      .get(`/queueLogs/todayLog`)
       .set('token', companyToken)
       .end(function(err,res){
         expect(err).to.be.null
@@ -173,7 +202,7 @@ describe.only(`queue test`, function(){
     })
   })
 
-  describe('POST /queueLogs/oneDayLog/:companyId', function(){
+  describe('POST /queueLogs/oneDayLog', function(){
     it('Success get all queueLog for based on date and companyId with status 200', function (done){
       let date = {
         date: "23",
@@ -182,7 +211,7 @@ describe.only(`queue test`, function(){
       };
       chai
       .request(app)
-      .post(`/queueLogs/oneDayLog/${companyId}`)
+      .post(`/queueLogs/oneDayLog`)
       .send(date)
       .set('token', companyToken)
       .end(function(err,res){
@@ -194,24 +223,27 @@ describe.only(`queue test`, function(){
     })
   })
 
-  // describe('POST /queueLogs/:companyId/:userId', function(){
-  //   it('Create queueLog with status 200', function (done){
+  describe('POST /queueLogs/:companyId', function(){
+    it('Create queueLog with status 200', function (done){
 
-  //     let input = {
-  //       problem: "23", // Cari ID
-  //     };
-  //     chai
-  //     .request(app)
-  //     .post(`/queueLogs/${companyId}/:userId/`)
-  //     .send(input)
-  //     .set('token', companyToken)
-  //     .end(function(err,res){
-  //       expect(err).to.be.null
-  //       expect(res).to.have.status(200)
-  //       expect(res.body).to.be.an("array")
-  //       done()
-  //     })
-  //   })
-  // })
+      let input = {
+        problem: problemId, // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${companyId}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(201)
+        expect(res.body).to.be.an("object")
+        console.log('ini datanya')
+        console.log(res.body)
+        expect(res.body).to.have.keys("_id","companyId", "userId", "duration", "problem", "checkIn", "status", "createdAt", "updatedAt")
+        done()
+      })
+    })
+  })
 
 })
