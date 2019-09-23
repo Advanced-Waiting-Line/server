@@ -7,9 +7,7 @@ const { generateToken } = require('../helpers/jwt')
 class CompanyController {
   static register(req, res, next) {
     let input = {}
-    if (req.file){
-      req.file.cloudStoragePublicUrl && (input.image = req.file.cloudStoragePublicUrl)
-    }
+    req.body.image && (input.image= req.body.image)
     req.body.openTime && (input.openTime = req.body.openTime)
     req.body.closeTime && (input.closeTime = req.body.closeTime)
     req.body.location && (input.location = req.body.location)

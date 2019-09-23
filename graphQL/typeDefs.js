@@ -33,6 +33,7 @@ const typeDefs = gql`
     ${'_id'}: String,
     openTime : String,
     closeTime: String,
+    image: String,
     location: String,
     email: String,
     password: String,

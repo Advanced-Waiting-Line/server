@@ -15,7 +15,7 @@ const Company = require('./model/Company')
 // === database ===
 if (process.env.NODE_ENV=='test'){
     mongoose.connect(`mongodb://localhost/${process.env.MONGODB_COLLECTION}-${process.env.NODE_ENV}`, 
-  { useNewUrlParser: true }, function (err) {
+  { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
     if (err) throw err
     else console.log('mongoose connected to mongodb localhost')
   })
