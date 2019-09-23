@@ -73,6 +73,7 @@ const typeDefs = gql`
     _id: String
     name: String
     duration: Int
+    description: String
   },
   type Location {
     lat: Float,
