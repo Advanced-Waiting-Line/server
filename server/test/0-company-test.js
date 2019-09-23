@@ -15,16 +15,20 @@ let idCompany
 //========== Company Test ==========
 describe(`company test`, function(){
   //========== Register ==========
+  this.timeout(10000)
   describe('POST /companies/register', function(){
     it('Sucess register company with status 201', function (done){
       let company = {
         openTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
         closeTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
-        location: {},
+        location: {
+          lat: -6.260181,
+          lng: 106.780505,
+         },
+        image: process.env.IMAGE_BASE64,
         email: "qwer@mail.com",
         password: "qwerqwer",
         queue: [],
-        file: ""
       }
       chai
       .request(app)
@@ -38,7 +42,7 @@ describe(`company test`, function(){
         // expect(res.body.openTime).to.equal("Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)")
         expect(res.body.email).to.equal("qwer@mail.com")
         expect(res.body.password).to.not.equal("qwerqwer")
-        expect(res.body).to.have.keys(['_id', 'openTime', "closeTime", "email", "password", "queue", "createdAt", "updatedAt", "__v"])
+        expect(res.body).to.have.keys(['_id', 'openTime', "closeTime", "location", "image", "email", "password", "queue", "createdAt", "updatedAt", "__v"])
         done()
       })
     })

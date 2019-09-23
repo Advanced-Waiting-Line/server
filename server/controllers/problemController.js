@@ -25,11 +25,12 @@ class ProblemController {
   }
 
   static create(req,res,next){
-    const {name, duration} = req.body
+    const {name, duration, description} = req.body
     const companyId = req.decode._id
     Problem.create({
       name,
       duration,
+      description,
       companyId
     }).then(problem =>{
       res.status(201).json(problem)

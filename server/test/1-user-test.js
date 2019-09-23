@@ -14,15 +14,19 @@ let idUser
 //========== User Test ==========
 describe(`user test`, function(){
   //========== Register ==========
+  this.timeout(10000)
   describe('POST /users/register', function(){
     it('Success register with status 201', function (done){
       let user = {
         firstName: "lorem ",
         lastName: "ipsum",
-        file: "",
+        image: process.env.IMAGE_BASE64,
         email: "qwer@mail.com",
         password: "qwerqwer",
-        location: {}
+        location: {
+          lat: -6.260181,
+          lng: 106.780505,
+         },
       }
       chai
       .request(app)
@@ -37,7 +41,7 @@ describe(`user test`, function(){
         expect(res.body.lastName).to.equal("ipsum")
         expect(res.body.email).to.equal("qwer@mail.com")
         expect(res.body.password).to.not.equal("qwerqwer")
-        expect(res.body).to.have.keys(['_id', 'firstName', 'lastName', 'email', "password", "createdAt", "updatedAt", "__v"])
+        expect(res.body).to.have.keys(['_id', 'firstName', 'lastName', 'location', 'image', 'email', "password", "createdAt", "updatedAt", "__v"])
         done()
       })
     })
@@ -157,7 +161,13 @@ describe(`user test`, function(){
   describe("PATCH /users/update/:id", function () {
     it("Success update with status 200", function (done) {
       let user = {
+        firstName: "tata",
         lastName: "ipsum",
+        email: "yaya@mail.com",
+        image: process.env.IMAGE_BASE64,
+        password: "qwerqwer",
+        location: {}
+
       };
       chai
         .request(app)
@@ -174,7 +184,7 @@ describe(`user test`, function(){
     })
   })
 
-  //========== update ==========
+  //========== delete ==========
   describe("DELETE /users/delete/:id", function () {
     it("Success delete with status 200", function (done) {
       chai

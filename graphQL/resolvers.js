@@ -4,21 +4,21 @@ const FormData = require('form-data')
 
 const resolvers = {
   Query: {
-    getAllCompanyQueue:  async (_,{token, companyId}, { dataSources }) => {
-      const result = await dataSources.queueAPI.getAllCompanyQueue(token, companyId)
+    getAllCompanyQueue:  async (_,{token}, { dataSources }) => {
+      const result = await dataSources.queueAPI.getAllCompanyQueue(token)
       return result  
     },
-    getTodayLog: async (_, {token, companyId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getTodayLog(token, companyId)
+    getTodayLog: async (_, {token}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getTodayLog(token)
+      console.log(result)
       return result  
     },
-    getOneDayLog: async (_, {token, companyId, date, month, year}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getOneDayLog(token, companyId, date, month, year)
+    getOneDayLog: async (_, {token, date, month, year}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getOneDayLog(token, date, month, year)
       return result  
     },
     getCompanyProblem: async (_,{companyId}, { dataSources }) => {
       const result = await dataSources.problemAPI.getCompanyProblem(companyId)
-      console.log(result)
       return result  
     },
   },
@@ -54,7 +54,6 @@ const resolvers = {
       return data
     },
     registerUser: async (parent, { firstName, lastName, image, email, password, location }, context, info) => {
-      // console.log({ firstName, lastName, image, email, password, location })
       let input = {}
       firstName && (input.firstName = firstName)
       lastName && (input.lastName = lastName)
@@ -62,7 +61,6 @@ const resolvers = {
       email && (input.email = email)
       password && (input.password = password)
       location && (input.location = location)
-
       const { data } = await axios.post(`${awanUrl}/users/register`, input)
       return data
     },
@@ -90,15 +88,30 @@ const resolvers = {
       return data
     },
     
-    createQueue: async (_, {token, companyId, userId, problemId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.createQueue(token, companyId, userId, problemId)
+    createQueue: async (_, {token, companyId, problemId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.createQueue(token, companyId, problemId)
+      return result  
+    },
+
+    updateDurationQueue: async (_, {token, queueId, duration}, {dataSources}) => {
+      const result = await dataSources.queueAPI.updateDurationQueue(token, queueId, duration)
+      return result  
+    },
+
+    removeFromQueue:  async (_, {token, queueId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.removeFromQueue(token, queueId)
+      return result  
+    },
+
+    updateStatus: async (_, {token, queueId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.updateStatus(token, queueId)
       return result  
     },
 
     //problem
     
-    createProblem: async (_,{token, name, duration}, { dataSources }) => {
-      const result = await dataSources.problemAPI.createProblem(token, name, duration)
+    createProblem: async (_,{token, name, duration, description}, { dataSources }) => {
+      const result = await dataSources.problemAPI.createProblem(token, name, duration, description)
       console.log(result)
       return result  
     },
