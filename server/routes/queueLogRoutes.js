@@ -3,6 +3,7 @@ const queueLogController = require('../controllers/queueLogController')
 const {authenticationCompany, authenticationUser} = require('../middlewares/authentication')
 
 // router.get("/", queueLogController.findAll)
+router.get('/user', authenticationUser, queueLogController.getQueueByUserId)
 router.use(authenticationCompany)
 router.get('/', queueLogController.getAllCompanyQueueLog)
 router.get('/todayLog', queueLogController.getTodayLog)

@@ -56,6 +56,7 @@ class ProblemAPI extends RESTDataSource {
             _id: problem._id,
           name: problem.name,
           duration: problem.duration,
+          description: problem. description
         }
     }
     

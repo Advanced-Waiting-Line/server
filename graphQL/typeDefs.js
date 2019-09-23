@@ -25,6 +25,9 @@ const typeDefs = gql`
       companyId: String
     )
     :[Problem]
+    getQueueByUserId(
+      token: String
+    ): [QueueLog]
   }
   type Company {
     ${'_id'}: String,
@@ -73,6 +76,7 @@ const typeDefs = gql`
     _id: String
     name: String
     duration: Int
+    description: String
   },
   type Location {
     lat: Float,
