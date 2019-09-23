@@ -80,6 +80,16 @@ class UserController {
       .catch(next)
   }
 
+  static findOneUser (req, res, next){
+    User.findOne({
+      _id: req.params.id
+    })
+      .then((user)=>{
+        res.status(200).json(user)
+      })
+      .catch(next)
+  }
+
   // static loginGoogle(req, res, next) {
   //   console.log('================', process.env.GOOGLE_CLIENT_ID)
   //   client.verifyIdToken({

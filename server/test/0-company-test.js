@@ -158,6 +158,21 @@ describe(`company test`, function(){
     })
   })
 
+    //========== Find All Company ==========
+    describe("GET /companies/findAll", function () {
+      it("Success get all company data with status 200", function(done){
+        chai
+          .request(app)
+          .get(`/companies/findAll`)
+          .end(function(err, res){
+            expect(err).to.be.null
+            expect(res).to.have.status(200)
+            expect(res.body).to.be.an("array")
+            done()
+          })
+      })
+    })
+
   //========== Clear Queue ==========
   describe("POST /clearQueue/", function () {
     it("Success clear queue company with status 200", function(done){
