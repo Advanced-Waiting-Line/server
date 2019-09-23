@@ -99,6 +99,11 @@ const resolvers = {
       return result  
     },
 
+    removeFromQueue:  async (_, {token, queueId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.removeFromQueue(token, queueId)
+      return result  
+    },
+
     //problem
     
     createProblem: async (_,{token, name, duration}, { dataSources }) => {

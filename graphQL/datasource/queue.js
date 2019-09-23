@@ -102,7 +102,17 @@ class QueueAPI extends RESTDataSource {
             message : response.message
         }
     }
-    
+    async removeFromQueue(token, queueId){
+        const response = await this.put(`remove/${queueId}`, null, 
+            {
+                headers: {
+                token
+            }
+        })
+        return {
+            message: response.message
+        }
+    }
   }
 
 

@@ -135,6 +135,10 @@ const typeDefs = gql`
       queueId: String
       duration: Int
     ):UpdateResult
+    removeFromQueue(
+      token: String
+      queueId:String
+    ):UpdateResult
   #problem
     
     createProblem(

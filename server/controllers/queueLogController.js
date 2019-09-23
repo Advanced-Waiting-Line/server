@@ -295,22 +295,30 @@ class QueueLogController {
       }
       console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
       console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
-      
-      
+
+      const currentEnd = new Date(currentCheckIn.getTime() + (currentQueue.problem.duration*60000))
+      console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
+
+
       if(nextQueue.length > 0){
         let currentTime = new Date()
         if(currentTime >= currentCheckIn){
-          let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
-          console.log(adjustingTime, "adjusting")
-          nextQueue.forEach( async queue => {
-            await QueueLog.updateOne({
-              _id : queue._id
-            },{
-              $set:{ 
-                checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
-              }
-            })
-          });
+          if(currentTime >= currentEnd){
+            
+          } else {
+            let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
+            console.log(adjustingTime, "adjusting")
+            nextQueue.forEach( async queue => {
+              await QueueLog.updateOne({
+                _id : queue._id
+              },{
+                $set:{ 
+                  checkIn: new Date(queue.checkIn.getTime() - (adjustingTime))
+                }
+              })
+            });
+
+          }
         } else {
           const duration = currentQueue.problem.duration
 
