@@ -7,22 +7,23 @@ const clearDatabase = require('../helpers/test/clearDatabase')
 chai.use(chaiHttp);
 
 after(function(done){
-  console.log('database user cleared')
+  console.log('database company cleared')
   clearDatabase(done)
 })
 
-//========== User Test ==========
-describe(`user test`, function(){
+let idCompany
+//========== Company Test ==========
+describe(`company test`, function(){
   //========== Register ==========
   describe('POST /companies/register', function(){
-    it.only('Sucess register with status 201', function (done){
+    it('Sucess register company with status 201', function (done){
       let company = {
         openTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
         closeTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
-        location: "jakarta",
+        location: {},
         email: "qwer@mail.com",
         password: "qwerqwer",
-        queue: "",
+        queue: [],
         file: ""
       }
       chai
@@ -30,20 +31,21 @@ describe(`user test`, function(){
       .post('/companies/register')
       .send(company)
       .end(function(err,res){
+        idCompany = res.body._id
         expect(err).to.be.null
         expect(res).to.have.status(201)
         expect(res.body).to.be.an("object")
         // expect(res.body.openTime).to.equal("Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)")
-        // expect(res.body.email).to.equal("qwer@mail.com")
-        // expect(res.body.password).to.not.equal("qwerqwer")
-        // expect(res.body).to.have.keys(['_id', 'name', 'email', 'password', 'isAdmin', "createdAt", "updatedAt", "__v"])
+        expect(res.body.email).to.equal("qwer@mail.com")
+        expect(res.body.password).to.not.equal("qwerqwer")
+        expect(res.body).to.have.keys(['_id', 'openTime', "closeTime", "email", "password", "queue", "createdAt", "updatedAt", "__v"])
         done()
       })
     })
-    it('Should error register user with invalid email and password (status: 400)', function(done){
+    it('Should error register company with invalid email and password (status: 400)', function(done){
       let company = {
         name: "qwer",
-        email: "qwemail.com",
+        email: "qwermai.com",
         password: "qwerqwer"
       }
       chai
@@ -55,26 +57,26 @@ describe(`user test`, function(){
         expect(res).to.have.status(400)
         expect(res.body).to.have.all.keys('code', 'message');
         expect(res.body.code).to.equal(400)
-        expect(res.body.message).to.equal(`User validation failed: email: ${user.email} is not a valid email`)
+        // expect(res.body.message).to.equal(`Company validation failed: email: ${company.email} is not a valid email`)
         done()
       })
     })
-    it("Should error register user with empty body (status: 400)", function (done) {
+    it("Should error company with empty body (status: 400)", function (done) {
       chai
         .request(app)
-        .post("/users/register")
+        .post("/companies/register")
         .send({})
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(400)
           expect(res.body).to.have.all.keys('code', 'message');
           expect(res.body.code).to.equal(400)
-          expect(res.body.message).to.equal('User validation failed: name: name cannot be empty, email: email cannot be emtpy, password: password cannot be empty')
+          // expect(res.body.message).to.equal('Company validation failed: name: name cannot be empty, email: email cannot be emtpy, password: password cannot be empty')
           done()
         })
     })
-    it("Should error register user with duplicate email; (status: 400)", function (done) {
-      let user = {
+    it("Should error register company with duplicate email; (status: 400)", function (done) {
+      let company = {
         name: "qwer",
         email: "qwer@mail.com",
         password: "qwerqwer"
@@ -82,47 +84,47 @@ describe(`user test`, function(){
 
       chai
         .request(app)
-        .post("/users/register")
-        .send(user)
+        .post("/companies/register")
+        .send(company)
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(400)
           expect(res.body).to.have.all.keys('code', 'message');
           expect(res.body.code).to.equal(400)
-          expect(res.body.message).to.equal(`User validation failed: email: Email ${user.email} has been used`)
+          // expect(res.body.message).to.equal(`Company validation failed: email: Email ${user.email} has been used`)
           done()
         })
     })
   })
 
   //========== Login ==========
-  describe("POST /users/login", function () {
-    it("Success login with status 200", function (done) {
-      let user = {
+  describe("POST /companies/login", function () {
+    it("Success login company with status 200", function (done) {
+      let company = {
         email: "qwer@mail.com",
         password: "qwerqwer"
       };
       chai
         .request(app)
-        .post("/users/login")
-        .send(user)
+        .post("/companies/login")
+        .send(company)
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res.body).to.be.an("object")
-          expect(res.body).to.have.keys("_id","email","name","token", "isAdmin")
+          expect(res.body).to.have.keys("_id", "token", "email")
           done();
         })
     })
     it("Login Failed: wrong email with status 401", function (done) {
-      let user = {
+      let company = {
         "email": "qwery@mail.com",
         "password": "qwerqwer",
       }
       chai
         .request(app)
-        .post("/users/login")
-        .send(user)
+        .post("/companies/login")
+        .send(company)
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(401)
@@ -133,20 +135,34 @@ describe(`user test`, function(){
         })
     })
     it("Login Failed: wrong password with status 401", function (done) {
-      let user = {
+      let company = {
         email: "qwer@mail.com",
         password: "12345"
       };
       chai
         .request(app)
-        .post("/users/login")
-        .send(user)
+        .post("/companies/login")
+        .send(company)
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(401)
           expect(res.body).to.have.all.keys('code', 'message');
           expect(res.body.code).to.equal(401)
           expect(res.body.message).to.equal('wrong email/password')
+          done()
+        })
+    })
+  })
+
+  //========== Clear Queue ==========
+  describe("POST /clearQueue/", function () {
+    it("Success clear queue company with status 200", function(done){
+      chai
+        .request(app)
+        .post(`/companies/clearQueue/${idCompany}`)
+        .end(function(err, res){
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
           done()
         })
     })
