@@ -46,7 +46,7 @@ const typeDefs = gql`
     location: Location,
     email: String,
     password: String,
-    queue: [String]
+    queue: [QueueLog]
   }
 
   type User {

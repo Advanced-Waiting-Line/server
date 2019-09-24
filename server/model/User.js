@@ -49,11 +49,11 @@ let UserSchema = new Schema ({
   location: {
     lat: {
       type: Object,
-      required: [true, 'latitude cannot be empty']
+      // required: [true, 'latitude cannot be empty']
     },
     lng: {
       type: Object,
-      required: [true, 'longitude cannot be empty']  
+      // required: [true, 'longitude cannot be empty']  
     }
   },
 },{timestamps: true})

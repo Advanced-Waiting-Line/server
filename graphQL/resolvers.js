@@ -58,7 +58,6 @@ const resolvers = {
           data: input
         })
       return data
-
     },
     loginCompany: async (parent, { email, password }, context, info) => {
       let input = {}

@@ -68,7 +68,12 @@ class CompanyController {
   }
 
   static findAllCompany (req, res, next){
-    Company.find({})
+    Company.find({}).populate({
+      path: 'queue',
+      populate: {
+        path: 'userId'
+      }
+    })
       .then((companies)=>{
         res.status(200).json(companies)
       })
