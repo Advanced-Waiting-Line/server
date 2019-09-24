@@ -196,8 +196,8 @@ class QueueLogController {
             status: false
       })
       
-      if(newQueue){
-        const pushedQueue = await Company.updateOne(
+
+      const pushedQueue = await Company.updateOne(
         {
           _id: req.decode._id
         }, 
@@ -206,9 +206,11 @@ class QueueLogController {
             queue: newQueue._id
           }
         },
-          {new: true}
-        )
-      }
+        {
+          new: true
+        }
+      )
+      
 
       res.status(201).json(newQueue)
     } catch(err) {
@@ -242,7 +244,6 @@ class QueueLogController {
       })         
       
       if(nextQueue.length > 0){
-        console.log('dapat next')
         nextQueue.forEach( async queue => {
           await QueueLog.updateOne({
             _id : queue._id
@@ -297,21 +298,18 @@ class QueueLogController {
             checkIn: {"$gt": currentCheckIn, "$lt": end}
       })    
 
-      if(nextQueue.length > 0){
-        console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
-        let today = new Date()
-        let adjusted = new Date(nextQueue[0].checkIn - ((nextQueue[0].checkIn.getTime()) - today))
-        console.log(adjusted)
-        console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
-      }
       console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
       console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
       const currentEnd = new Date(currentCheckIn.getTime() + (currentQueue.problem.duration*60000))
       console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
 
-
       if(nextQueue.length > 0){
+        console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
+        let today = new Date()
+        let adjusted = new Date(nextQueue[0].checkIn - ((nextQueue[0].checkIn.getTime()) - today))
+        console.log(adjusted)
+        console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
         let currentTime = new Date()
         /* istanbul ignore next */
         if(currentTime >= currentCheckIn){
