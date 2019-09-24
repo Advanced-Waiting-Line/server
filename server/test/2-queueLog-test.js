@@ -54,6 +54,8 @@ describe('POST /companies/register', function(){
   this.timeout(10000)
   it('Sucess register company with status 201', function (done){
     let company = {
+      name: "Lorem",
+      address: "Ipsum",
       openTime: "Wed Oct 18 2017 00:41:34 GMT+0000 (UTC)",
       closeTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
       location: {
@@ -76,7 +78,7 @@ describe('POST /companies/register', function(){
       expect(res.body).to.be.an("object")
       // expect(res.body.openTime).to.equal("Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)")
       expect(res.body.password).to.not.equal("qwerqwer")
-      expect(res.body).to.have.keys(['_id', 'openTime', "closeTime", 'location', "image", "email", "password", "queue", "createdAt", "updatedAt", "__v"])
+      expect(res.body).to.have.keys(['_id', 'name', 'address', 'openTime', "closeTime", 'location', "image", "email", "password", "queue", "createdAt", "updatedAt", "__v"])
       done()
     })
   })
