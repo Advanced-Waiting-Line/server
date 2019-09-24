@@ -140,7 +140,7 @@ describe(`company test`, function(){
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res.body).to.be.an("object")
-          expect(res.body).to.have.keys("_id", "token", "email")
+          expect(res.body).to.have.keys("_id", "name", "token", "email")
           done();
         })
     })
