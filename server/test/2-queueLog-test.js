@@ -54,7 +54,7 @@ describe('POST /companies/register', function(){
   this.timeout(10000)
   it('Sucess register company with status 201', function (done){
     let company = {
-      openTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
+      openTime: "Wed Oct 18 2017 00:41:34 GMT+0000 (UTC)",
       closeTime: "Wed Oct 18 2017 12:41:34 GMT+0000 (UTC)",
       location: {
         lat: -6.260181,
@@ -187,6 +187,29 @@ describe(`queue test`, function(){
         done()
       })
     })
+    it('Should throw error when getting all queue log with invalid token', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs`)
+      .set('token', "invalidtokenformat")
+      .end(function(err,res){
+        expect(res).to.have.status(500)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message","code")
+        done()
+      })
+    })
+    it('Should throw error when getting all queue log with no token', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs`)
+      .end(function(err,res){
+        expect(res).to.have.status(401)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message", "code")
+        done()
+      })
+    })
   })
 
   describe('GET /queueLogs/todayLog', function(){
@@ -245,6 +268,97 @@ describe(`queue test`, function(){
         done()
       })
     })
+
+    it('Create second queueLog with status 201', function (done){
+
+      let input = {
+        problem: problemId, // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${companyId}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(201)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("_id","companyId", "userId", "duration", "problem", "checkIn", "status", "createdAt", "updatedAt")
+        done()
+      })
+    })
+
+    it('Should error when Create queueLog with invalid problem', function (done){
+
+      let input = {
+        problem: "5d847d34b203fa4684aaaaaa", // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${companyId}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message","code")
+        done()
+      })
+    })
+
+    it('Should error when Create queueLog with invalid companyId', function (done){
+
+      let input = {
+        problem: problemId, // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${"5d847d34b203fa4684aaaaaa"}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message", "code")
+        done()
+      })
+    })
+    
+    it('Should error when Create queueLog with invalid token', function (done){
+
+      let input = {
+        problem: problemId, // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${"5d847d34b203fa4684aaaaaa"}`)
+      .send(input)
+      .set('token', "invalid token")
+      .end(function(err,res){
+        expect(res).to.have.status(500)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message", "code")
+        done()
+      })
+    })
+
+    it('Should error when Create queueLog with no token', function (done){
+
+      let input = {
+        problem: problemId, // Cari ID
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/${"5d847d34b203fa4684aaaaaa"}`)
+      .send(input)
+      .end(function(err,res){
+        expect(res).to.have.status(401)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message","code")
+        done()
+      })
+    })
+
   })
 
   describe('PUT /queueLogs/duration/:queueLogId', function(){
@@ -265,10 +379,22 @@ describe(`queue test`, function(){
         done()
       })
     })
+    it(' should error when Updating queue duration with invalid queueId', function (done){
+      chai
+      .request(app)
+      .put(`/queueLogs/duration/${"5d847d34b203fa4684aaaaaa"}`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(res).to.have.status(500)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message","code")
+        done()
+      })
+    })
   })
 
   describe('PUT /queueLogs/remove/:queueLogId', function(){
-    it('Update queue duration', function (done){
+    it('Update removing queue from the line', function (done){
       chai
       .request(app)
       .put(`/queueLogs/remove/${queueLogId}`)
@@ -281,6 +407,20 @@ describe(`queue test`, function(){
         done()
       })
     })
+    it('should error when removing queue from the line with invalid queuelogId', function (done){
+      chai
+      .request(app)
+      .put(`/queueLogs/remove/${"5d847d34b203fa4684aaaaaa"}`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(res).to.have.status(500)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message", "code")
+        done()
+      })
+    })
+
+    
   })
 
   describe('PUT /queueLogs/status/:queueLogId', function(){
@@ -294,6 +434,19 @@ describe(`queue test`, function(){
         expect(res).to.have.status(200)
         expect(res.body).to.be.an("object")
         // expect(res.body).to.have.keys("message")
+        done()
+      })
+    })
+
+    it('Should error when updating queue duration with invalid queueId', function (done){
+      chai
+      .request(app)
+      .put(`/queueLogs/status/${"5d847d34b203fa4684aaaaaa"}`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
