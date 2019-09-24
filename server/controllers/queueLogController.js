@@ -264,11 +264,9 @@ class QueueLogController {
         checkIn
       })
 
-    } catch{
-      next()
+    } catch(err) {
+      next(err)
     }
-
-      
   }
   
   static async create(req,res,next){
