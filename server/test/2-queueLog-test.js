@@ -299,7 +299,6 @@ describe(`queue test`, function(){
         expect(res).to.have.status(201)
         expect(res.body).to.be.an("object")
         expect(res.body).to.have.keys("_id","companyId", "userId", "duration", "problem", "checkIn", "status", "createdAt", "updatedAt")
-        // expect(res.body.status).to.equal(false)
         done()
       })
     })
