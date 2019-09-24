@@ -10,8 +10,8 @@ module.exports = function (done){
       .then(function(){
         done()
       })
-      .catch(function(err){
-        done(err)
-      })
+      // .catch(function(err){
+      //   done(err)
+      // })
   }
 }
