@@ -35,6 +35,14 @@ const typeDefs = gql`
     findCompanyById(
       companyId:String
     ): Company
+
+    getDailyPercentage(
+      token: String
+    ):Daily
+
+    getWeeklyPercentage(
+      token: String
+    ):Weekly
   }
   type Company {
     _id: String
@@ -67,6 +75,14 @@ const typeDefs = gql`
     nModified: Int
     ok: Int
   }
+
+  type Preview{
+    companyId: Company
+    userId: User
+    problem: Problem
+    duration: Int
+    checkIn: String
+  }
   
   type QueueLog{
     _id: String
@@ -86,15 +102,26 @@ const typeDefs = gql`
     name: String
     duration: Int
     description: String
-  },
+  }
   type Location {
     lat: Float,
     lng: Float
-  },
+  }
   input InputLocation {
     lat: Float,
     lng: Float
-  },
+  }
+
+  type Daily {
+    percentage: Float,
+    currentDay: Int,
+    lastDay: Int
+  }
+  type Weekly {
+    percentage: Float,
+    currentWeek: Int,
+    lastWeek: Int
+  }
 
   type Mutation {
     registerCompany(
@@ -144,6 +171,11 @@ const typeDefs = gql`
       companyId: String
       problemId: String)
     :QueueLog
+    getPreview(
+      token: String 
+      companyId: String
+      problemId: String
+    ):Preview
     updateDurationQueue(
       token: String
       queueId: String
@@ -176,6 +208,7 @@ const typeDefs = gql`
       duration: Int
     ):Problem
   }  
+  
 `
 
 module.exports = typeDefs

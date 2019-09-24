@@ -37,6 +37,14 @@ const resolvers = {
       const result = await dataSources.companyAPI.findCompanyById(companyId)
       return result
     },
+    getDailyPercentage : async (_,{token}, { dataSources }) => {
+      const result = await dataSources.queueAPI.getDailyPercentage(token)
+      return result
+    },
+    getWeeklyPercentage : async (_,{token}, { dataSources }) => {
+      const result = await dataSources.queueAPI.getWeeklyPercentage(token)
+      return result
+    },
 
   },
   Mutation: {
@@ -108,6 +116,11 @@ const resolvers = {
     
     createQueue: async (_, {token, companyId, problemId}, {dataSources}) => {
       const result = await dataSources.queueAPI.createQueue(token, companyId, problemId)
+      return result  
+    },
+
+    getPreview: async (_, {token, companyId, problemId}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getPreview(token, companyId, problemId)
       return result  
     },
 

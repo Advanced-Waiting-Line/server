@@ -17,6 +17,16 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
+    previewReducer(preview){
+        return{
+            companyId: preview.companyId,
+            userId: preview.userId,
+            problem: preview.problem,
+            duration: preview.duration,
+            checkIn: preview.checkIn
+        }
+    }
+
     queueReducer(queue){
         return {
             _id: queue._id,
@@ -102,6 +112,20 @@ class QueueAPI extends RESTDataSource {
         return this.queueReducer(response)
     }
 
+    async getPreview(token, id, problemId){
+        const payload = {
+            problem: problemId
+        }
+        const response = await this.post(`/preview/${id}`, payload, 
+            {
+                headers:{
+                token
+            }
+        });        
+        return this.previewReducer(response)
+    }
+
+
     async updateDurationQueue(token, queueId, duration){
         const payload = {
             duration
@@ -138,7 +162,27 @@ class QueueAPI extends RESTDataSource {
         return {
             message: response.message
         }
-    }   
+    }
+
+    async getDailyPercentage(token){
+        const response = await this.get(`daily`, null,
+        {
+            headers: {
+                token
+            }
+        })
+        return response
+    }
+
+    async getWeeklyPercentage(token){
+        const response = await this.get(`weekly`, null,
+        {
+            headers: {
+                token
+            }
+        })
+        return response
+    }
   }
 
 
