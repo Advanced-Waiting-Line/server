@@ -5,15 +5,15 @@ const Company = require('../model/Company')
 const  options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
 
 class QueueLogController {
-  static findAll(req,res,next){
-    QueueLog.find({})
-    .populate('problem')
-    .populate('companyId')
-    .populate('userId')
-    .then(queues=>{
-        res.json(queues)
-    })
-  }
+  // static findAll(req,res,next){
+  //   QueueLog.find({})
+  //   .populate('problem')
+  //   .populate('companyId')
+  //   .populate('userId')
+  //   .then(queues=>{
+  //       res.json(queues)
+  //   })
+  // }
 
   static getAllCompanyQueueLog(req,res,next){
     QueueLog.find({
@@ -23,9 +23,7 @@ class QueueLogController {
     .populate('userId')
     .then(queues=>{
       res.json(queues)
-    }).catch(err=>{
-      next(err)
-    })
+    }).catch(next)
   }
 
   static getTodayLog(req,res,next){
@@ -40,9 +38,7 @@ class QueueLogController {
     .populate('userId')
     .then(queues=>{
       res.json(queues)
-    }).catch(err=>{
-      next(err)
-    })
+    }).catch(next)
   }
 
   static getOneDayLog(req,res,next){
@@ -63,9 +59,7 @@ class QueueLogController {
       console.log('dari controller')
       console.log(queues)
       res.json(queues)
-    }).catch(err=>{
-      next(err)
-    })
+    }).catch(next)
     
   }
 
@@ -107,9 +101,6 @@ class QueueLogController {
         _id: req.params.companyId
       })
 
-      if(!currentCompany){
-        next()
-      }
       //handle open & close time
       let today = new Date()
       console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
@@ -220,7 +211,6 @@ class QueueLogController {
       }
 
       res.status(201).json(newQueue)
-      // res.send('ok')
     } catch(err) {
       next(err)
     }
