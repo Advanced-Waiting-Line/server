@@ -227,6 +227,21 @@ describe(`queue test`, function(){
     })
   })
 
+  describe('GET /queueLogs/user', function(){
+    it('Success get all queueLog for today based on userId with status 200', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs/user`)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("array")
+        done()
+      })
+    })
+  })
+
   describe('POST /queueLogs/oneDayLog', function(){
     it('Success get all queueLog for based on date and companyId with status 200', function (done){
       let date = {
@@ -284,6 +299,7 @@ describe(`queue test`, function(){
         expect(res).to.have.status(201)
         expect(res.body).to.be.an("object")
         expect(res.body).to.have.keys("_id","companyId", "userId", "duration", "problem", "checkIn", "status", "createdAt", "updatedAt")
+        // expect(res.body.status).to.equal(false)
         done()
       })
     })
