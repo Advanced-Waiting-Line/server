@@ -391,7 +391,7 @@ class QueueLogController {
       })
       
       if(newQueue){
-        const pushedQueue = await Company.updateOne(
+        await Company.updateOne(
           {
             _id: req.params.companyId
           }, 
