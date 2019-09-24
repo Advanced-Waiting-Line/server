@@ -35,6 +35,14 @@ const typeDefs = gql`
     findCompanyById(
       companyId:String
     ): Company
+
+    getDailyPercentage(
+      token: String
+    ):Daily
+
+    getWeeklyPercentage(
+      token: String
+    ):Weekly
   }
   type Company {
     _id: String
@@ -94,15 +102,26 @@ const typeDefs = gql`
     name: String
     duration: Int
     description: String
-  },
+  }
   type Location {
     lat: Float,
     lng: Float
-  },
+  }
   input InputLocation {
     lat: Float,
     lng: Float
-  },
+  }
+
+  type Daily {
+    percentage: Float,
+    currentDay: Int,
+    lastDay: Int
+  }
+  type Weekly {
+    percentage: Float,
+    currentWeek: Int,
+    lastWeek: Int
+  }
 
   type Mutation {
     registerCompany(
@@ -189,6 +208,7 @@ const typeDefs = gql`
       duration: Int
     ):Problem
   }  
+  
 `
 
 module.exports = typeDefs
