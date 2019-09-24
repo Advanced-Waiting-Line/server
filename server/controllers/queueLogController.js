@@ -15,6 +15,41 @@ class QueueLogController {
   //   })
   // }
 
+  static async getWeeklyPercentage(req,res,next){
+    try{
+      const today = new Date()
+      today.setHours(23)
+      today.setMinutes(59)
+  
+      const seventh = new Date(today - 6.048e+8)
+      const fourteenth = new Date(today - 1.21e+9)
+      console.log(today.toLocaleDateString("en-US", options), "today time in local <<<")
+      console.log(seventh.toLocaleDateString("en-US", options), "7th time in local <<<")
+      console.log(fourteenth.toLocaleDateString("en-US", options), "14th time in local <<<")
+      
+      const currentWeek = await QueueLog.find({
+        "companyId": req.decode._id,
+        "checkIn": {"$gte": seventh, "$lt": today}
+      })
+
+      const lastWeek = await QueueLog.find({
+        "companyId": req.decode._id,
+        "checkIn": {"$gte": fourteenth, "$lt": seventh}
+      }) 
+
+      let cw = currentWeek.length
+      let lw = lastWeek.length
+      console.log(cw, "first week data")
+      console.log(lw, "lasta week data")
+
+      let percentage = currentWeek.length/lastWeek.length * 100
+      console.log(percentage, "percentage")
+      res.send("ok")
+    } catch(err){
+
+    }
+  }
+
   static getAllCompanyQueueLog(req,res,next){
     QueueLog.find({
       "companyId": req.decode._id})
@@ -196,20 +231,23 @@ class QueueLogController {
             status: false
       })
       
-
-      const pushedQueue = await Company.updateOne(
-        {
-          _id: req.decode._id
-        }, 
-        {
-          $addToSet:{
-            queue: newQueue._id
+      if(newQueue){
+        console.log(req.decode , " <<<<<<<<<<<<<<<<")
+        const pushedQueue = await Company.updateOne(
+          {
+            _id: req.params.companyId
+          }, 
+          {
+            $addToSet:{
+              queue: newQueue._id
+            }
+          },
+          {
+            new: true
           }
-        },
-        {
-          new: true
-        }
-      )
+        )
+
+      }
       
 
       res.status(201).json(newQueue)
