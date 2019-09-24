@@ -49,6 +49,7 @@ class ProblemController {
 
   static update(req,res,next){
     const {duration, name, description} = req.body
+    console.log(description, '<<<<');
     Problem.findOneAndUpdate({
       _id: req.params.problemId
     },{

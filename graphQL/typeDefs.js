@@ -204,6 +204,7 @@ const typeDefs = gql`
     updateProblem(
       token: String
       problemId: String
+      description: String
       name: String
       duration: Int
     ):Problem
