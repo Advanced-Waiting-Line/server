@@ -40,8 +40,10 @@ const resolvers = {
 
   },
   Mutation: {
-    registerCompany: async (parent, { openTime, closeTime, image, location, email, password }, context, info) => {      
+    registerCompany: async (parent, { name, address, openTime, closeTime, image, location, email, password }, context, info) => {      
       let input = {}
+      name && (input.name = name)
+      address && (input.address = address)
       openTime && (input.openTime = openTime)
       closeTime && (input.closeTime = closeTime)
       image && (input.image = image)
@@ -56,7 +58,6 @@ const resolvers = {
           data: input
         })
       return data
-
     },
     loginCompany: async (parent, { email, password }, context, info) => {
       let input = {}

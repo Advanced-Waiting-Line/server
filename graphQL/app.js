@@ -24,6 +24,6 @@ const server = new ApolloServer({
 }),
 })
 
-server.applyMiddleware({app, path: '/graphql'})
+server.applyMiddleware({app, path: '/graphql', bodyParserConfig: {limit: "5mb"}})
 
 app.listen(PORT, () => console.log(`Apollo Server Running On Port ${PORT}`))

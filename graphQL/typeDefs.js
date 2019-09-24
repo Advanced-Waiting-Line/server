@@ -39,12 +39,14 @@ const typeDefs = gql`
   type Company {
     _id: String
     openTime : String,
+    name: String,
+    address: String,
     closeTime: String,
     image: String,
     location: Location,
     email: String,
     password: String,
-    queue: [String]
+    queue: [QueueLog]
   }
 
   type User {
@@ -104,12 +106,14 @@ const typeDefs = gql`
 
   type Mutation {
     registerCompany(
-      openTime: String,
-      closeTime: String,
-      location: InputLocation,
-      image: String,
-      email: String,
-      password: String,
+      name: String
+      address: String
+      openTime: String
+      closeTime: String
+      location: InputLocation
+      image: String
+      email: String
+      password: String
     ): Company,
     loginCompany(
       email: String
