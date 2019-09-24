@@ -67,6 +67,14 @@ const typeDefs = gql`
     nModified: Int
     ok: Int
   }
+
+  type Preview{
+    companyId: Company
+    userId: User
+    problem: Problem
+    duration: Int
+    checkIn: String
+  }
   
   type QueueLog{
     _id: String
@@ -144,6 +152,11 @@ const typeDefs = gql`
       companyId: String
       problemId: String)
     :QueueLog
+    getPreview(
+      token: String 
+      companyId: String
+      problemId: String
+    ):Preview
     updateDurationQueue(
       token: String
       queueId: String
