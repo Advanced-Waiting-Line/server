@@ -162,7 +162,27 @@ class QueueAPI extends RESTDataSource {
         return {
             message: response.message
         }
-    }   
+    }
+
+    async getDailyPercentage(token){
+        const response = await this.get(`daily`, null,
+        {
+            headers: {
+                token
+            }
+        })
+        return response
+    }
+
+    async getWeeklyPercentage(token){
+        const response = await this.get(`weekly`, null,
+        {
+            headers: {
+                token
+            }
+        })
+        return response
+    }
   }
 
 
