@@ -180,20 +180,35 @@ describe(`company test`, function(){
     })
   })
 
-    //========== Find All Company ==========
-    describe("GET /companies/findAll", function () {
-      it("Success get all company data with status 200", function(done){
-        chai
-          .request(app)
-          .get(`/companies/findAll`)
-          .end(function(err, res){
-            expect(err).to.be.null
-            expect(res).to.have.status(200)
-            expect(res.body).to.be.an("array")
-            done()
-          })
-      })
+  //========== Find All Company ==========
+  describe("GET /companies/findAll", function () {
+    it("Success get all company data with status 200", function(done){
+      chai
+        .request(app)
+        .get(`/companies/findAll`)
+        .end(function(err, res){
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an("array")
+          done()
+        })
     })
+  })
+
+  //========== Find Company By Id ==========
+  describe("GET /companies/findOne/", function () {
+    it("Success get all company data with status 200", function(done){
+      chai
+        .request(app)
+        .get(`/companies/findOne/${idCompany}`)
+        .end(function(err, res){
+          expect(err).to.be.null
+          expect(res).to.have.status(200)
+          expect(res.body).to.be.an("object")
+          done()
+        })
+    })
+  })
 
   //========== Clear Queue ==========
   describe("POST /clearQueue/", function () {
