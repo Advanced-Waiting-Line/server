@@ -33,6 +33,10 @@ const resolvers = {
       const result = await dataSources.userAPI.findOneUser(userId)
       return result
     },
+    findCompanyById: async (_,{companyId}, { dataSources }) => {
+      const result = await dataSources.companyAPI.findCompanyById(companyId)
+      return result
+    },
 
   },
   Mutation: {

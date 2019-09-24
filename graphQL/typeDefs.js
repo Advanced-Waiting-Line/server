@@ -32,6 +32,9 @@ const typeDefs = gql`
     findOneUser(
       userId: String
     ): User
+    findCompanyById(
+      companyId:String
+    ): Company
   }
   type Company {
     _id: String
