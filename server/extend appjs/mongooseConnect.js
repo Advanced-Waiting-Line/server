@@ -20,10 +20,5 @@ module.exports = () => {
       if (err) throw err
       else console.log('mongoose connected to mongodb atlas')
     })
-    // mongoose.connect(`mongodb+srv://admin:admin@master-cluster-nwspo.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
-    // {useNewUrlParser: true, useUnifiedTopology: true}, function(err){
-    //   if (err) throw err
-    //   else console.log('mongoose connected to mongodb atlas')
-    // })
   }
 }

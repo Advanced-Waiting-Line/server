@@ -11,6 +11,14 @@ let CompanySchema = new Schema ({
     type: Date,
     required: [true, "date cannot be empty"]
   },
+  name: {
+    type: String,
+    required: [true, 'name cannot be empty']
+  },
+  address: {
+    type: String,
+    required: [true, 'address cannot be empty']
+  },
   image : {
     type: String,
     
@@ -18,11 +26,11 @@ let CompanySchema = new Schema ({
   location: {
     lat: {
       type: Object,
-      required: [true, 'latitude cannot be empty']
+      // required: [true, 'latitude cannot be empty']
     },
     lng: {
       type: Object,
-      required: [true, 'longitude cannot be empty']  
+      // required: [true, 'longitude cannot be empty']  
     }
   },
   email: {
