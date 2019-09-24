@@ -72,6 +72,16 @@ class CompanyController {
       .catch(next)
   }
 
+  static findCompanyById(req, res, next){
+    Company.findOne({
+      _id: req.params.id
+    })
+      .then((company)=>{
+        res.status(200).json(company)
+      })
+      .catch(next)
+  }
+
   // static loginGoogle(req, res, next) {
   //   console.log('================', process.env.GOOGLE_CLIENT_ID)
   //   client.verifyIdToken({

@@ -1,6 +1,6 @@
 module.exports = function (err, req, res, next){
   // console.log('masuk error handling')
-  // console.log(err)
+  console.log(err)
 
   if (err.name === "ValidationError"){
     let status = 400
