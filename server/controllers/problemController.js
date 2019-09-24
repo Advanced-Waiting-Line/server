@@ -1,15 +1,15 @@
 const Problem = require('../model/Problem')
 
 class ProblemController {
-  static findAll(req,res,next){
-    Problem.find({})
-    .then(problems =>{
-      res.json(problems)
-    })
-    .catch(err=>{
-      next(err)
-    })
-  }
+  // static findAll(req,res,next){
+  //   Problem.find({})
+  //   .then(problems =>{
+  //     res.json(problems)
+  //   })
+  //   .catch(err=>{
+  //     next(err)
+  //   })
+  // }
 
   static getCompanyProblem(req,res,next){
     Problem.find({
