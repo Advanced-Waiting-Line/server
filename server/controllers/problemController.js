@@ -48,13 +48,14 @@ class ProblemController {
   }
 
   static update(req,res,next){
-    const {duration, name} = req.body
+    const {duration, name, description} = req.body
     Problem.findOneAndUpdate({
       _id: req.params.problemId
     },{
       $set: {
         duration,
-        name
+        name,
+        description
       }
     },{
       new: true

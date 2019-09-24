@@ -28,9 +28,13 @@ const typeDefs = gql`
     getQueueByUserId(
       token: String
     ): [QueueLog]
+    getAllCompany: [Company]
+    findOneUser(
+      userId: String
+    ): User
   }
   type Company {
-    ${'_id'}: String,
+    _id: String
     openTime : String,
     closeTime: String,
     image: String,
@@ -47,7 +51,7 @@ const typeDefs = gql`
     image: String
     email: String
     password: String
-    location: String
+    location: Location
   }
 
   type Notification {

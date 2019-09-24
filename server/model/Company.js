@@ -44,9 +44,9 @@ let CompanySchema = new Schema ({
               return true
             }
           })
-          .catch((err)=>{
-            return false
-          })
+          // .catch((err)=>{
+          //   return false
+          // })
       },
       message : props => `Email ${props.value} has been used`
     }],

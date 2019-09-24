@@ -43,9 +43,11 @@ app.use(require('morgan')('dev'));
 app.use('/', route)
 app.use(errorHandler)
 
+/* istanbul ignore next: can't test cron */
 cron.schedule('0 0 * * *', () => {
   // Setiap 7 detik (untuk keperluan contoh: */7 * * * * *
   // console.log('running a task every second');
+  /* istanbul ignore next: can't test cron */
   Company.updateMany({}, {queue: []})
     .then((status) => {
       console.log('company queue cleared')

@@ -93,7 +93,7 @@ class QueueLogController {
       console.log(foundProblem)
       if(!foundProblem){
         next({
-          code: 404,
+          status: 404,
           message: "problem doesn't exist"
         })
       }
@@ -106,6 +106,10 @@ class QueueLogController {
       const currentCompany = await Company.findOne({
         _id: req.params.companyId
       })
+
+      if(!currentCompany){
+        next()
+      }
       //handle open & close time
       let today = new Date()
       console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
@@ -137,7 +141,7 @@ class QueueLogController {
         .populate('problem')
 
       today = new Date()
-
+      /* istanbul ignore next */
       if(!lastQueue){
         if(today >= (openTime - 30*600000)){
           checkIn = delayCheckIn(today, 30)
@@ -168,7 +172,7 @@ class QueueLogController {
       }   
 
       today = new Date()
-
+      /* istanbul ignore next */
       if(checkIn > closeTime ){
         next({
           code: 403,
@@ -232,6 +236,11 @@ class QueueLogController {
       const currentQueue = await QueueLog.findOne({
         _id: req.params.queueLogId
       })
+
+      if(!currentQueue){
+
+        next({})
+      }
       let currentCheckIn = new Date(currentQueue.checkIn)    
       
       const end = new Date(currentCheckIn.getTime())
@@ -281,12 +290,12 @@ class QueueLogController {
         }
       })
 
-
       const currentQueue = await QueueLog.findOne({
         _id: req.params.queueLogId
       })
       .populate('problem')
 
+     
       let currentCheckIn = new Date(currentQueue.checkIn)    
       
       
@@ -314,12 +323,12 @@ class QueueLogController {
 
       if(nextQueue.length > 0){
         let currentTime = new Date()
+        /* istanbul ignore next */
         if(currentTime >= currentCheckIn){
           if(currentTime >= currentEnd){
             
           } else {
             let adjustingTime = (nextQueue[0].checkIn.getTime()) - currentTime
-            console.log(adjustingTime, "adjusting")
             nextQueue.forEach( async queue => {
               await QueueLog.updateOne({
                 _id : queue._id

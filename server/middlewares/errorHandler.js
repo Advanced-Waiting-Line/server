@@ -16,7 +16,8 @@ module.exports = function (err, req, res, next){
   }
   else {
     let status = err.status || err.code || 500
+    let code = err.status || err.code || 500
     let message = err.message || 'internal server error'
-    res.status(status).json({message: message})
+    res.status(status).json({code, message})
   }
 }

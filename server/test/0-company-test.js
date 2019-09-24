@@ -99,6 +99,28 @@ describe(`company test`, function(){
           done()
         })
     })
+    it("Should error register company with nonBase64 picture; (status: 400)", function (done) {
+      let company = {
+        name: "abcd",
+        email: "abcd@mail.com",
+        password: "qwerqwer",
+        image: `bababa${process.env.IMAGE_BASE64}`
+      }
+
+      chai
+        .request(app)
+        .post("/companies/register")
+        .send(company)
+        .end(function (err, res) {
+          expect(err).to.be.null;
+          expect(res).to.have.status(400)
+          console.log(res.body)
+          // expect(res.body).to.have.all.keys('code', 'message');
+          // expect(res.body.code).to.equal(400)
+          // expect(res.body.message).to.equal(`Company validation failed: email: Email ${user.email} has been used`)
+          done()
+        })
+    })
   })
 
   //========== Login ==========
@@ -157,6 +179,21 @@ describe(`company test`, function(){
         })
     })
   })
+
+    //========== Find All Company ==========
+    describe("GET /companies/findAll", function () {
+      it("Success get all company data with status 200", function(done){
+        chai
+          .request(app)
+          .get(`/companies/findAll`)
+          .end(function(err, res){
+            expect(err).to.be.null
+            expect(res).to.have.status(200)
+            expect(res.body).to.be.an("array")
+            done()
+          })
+      })
+    })
 
   //========== Clear Queue ==========
   describe("POST /clearQueue/", function () {
