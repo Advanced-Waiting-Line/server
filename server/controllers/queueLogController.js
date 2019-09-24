@@ -1,6 +1,7 @@
 const QueueLog = require('../model/QueueLog')
 const Problem = require('../model/Problem')
 const delayCheckIn = require('../helpers/checkInModifyer/delayCheckIn')
+const calcAvg = require('../helpers/calcAvg')
 const Company = require('../model/Company')
 const  options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
 
@@ -42,11 +43,52 @@ class QueueLogController {
       console.log(cw, "first week data")
       console.log(lw, "lasta week data")
 
-      let percentage = currentWeek.length/lastWeek.length * 100
-      console.log(percentage, "percentage")
-      res.send("ok")
+      let percentage = calcAvg(cw,lw)
+      res.json({
+        percentage,
+        currentWeek :  cw,
+        lastWeek : lw
+      })
     } catch(err){
 
+    }
+  }
+
+  static async getDailyPercentage(req,res,next){
+    try{
+      const todayEnd = new Date()
+      todayEnd.setHours(23)
+      todayEnd.setMinutes(59)
+  
+      const todayStart = new Date(todayEnd - 8.64e+7)
+      const yesterday = new Date(todayStart - 8.64e+7)
+      console.log(todayStart.toLocaleDateString("en-US", options), "today start in local <<<")
+      console.log(todayEnd.toLocaleDateString("en-US", options), "today end in local <<<")
+      console.log(yesterday.toLocaleDateString("en-US", options), "yesterday in local <<<")
+      
+      const thisDay = await QueueLog.find({
+        "companyId": req.decode._id,
+        "checkIn": {"$gt": todayStart, "$lt": todayEnd}
+      })
+
+      const lastDay = await QueueLog.find({
+        "companyId": req.decode._id,
+        "checkIn": {"$gt": yesterday, "$lt": todayStart}
+      }) 
+
+      let cd = thisDay.length
+      let ld = lastDay.length
+      console.log(cd, "this day data")
+      console.log(ld, "last day data")
+
+      let percentage = calcAvg(cd,ld)
+      res.json({
+        percentage,
+        currentDay :  cd,
+        lastDay : ld
+      })
+    } catch(err){
+      next()
     }
   }
 
@@ -108,6 +150,125 @@ class QueueLogController {
       res.json(result)
     })
     .catch(next)
+  }
+
+  static async preview(req,res,next){
+    try{
+      //handle problem
+      const foundProblem = await Problem.findOne({
+        _id: req.body.problem,
+        companyId: req.params.companyId
+      })
+      console.log(foundProblem)
+      if(!foundProblem){
+        next({
+          status: 404,
+          message: "problem doesn't exist"
+        })
+      }
+      const problem = req.body.problem
+      const duration = foundProblem.duration
+
+
+      //handle company
+
+      const currentCompany = await Company.findOne({
+        _id: req.params.companyId
+      })
+
+      //handle open & close time
+      let today = new Date()
+      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      const openHour = currentCompany.openTime.getHours()
+      const openMinute = currentCompany.openTime.getMinutes()
+
+      const closeHour = currentCompany.closeTime.getHours()
+      const closeMinute = currentCompany.closeTime.getMinutes()
+
+      const openTime = new Date(today.setHours(openHour))
+      openTime.setMinutes(openMinute)
+
+      const closeTime = new Date(today.setHours(closeHour))
+      closeTime.setMinutes(closeMinute)
+
+      
+
+      //handle checkin time
+      let checkIn = new Date()
+      today = new Date()
+      const start = new Date(today.setHours(6))
+      const end = new Date(today.setHours(23))
+    
+      const lastQueue = await QueueLog
+        .findOne({
+          "companyId": req.params.companyId,
+          "checkIn": {"$gte": start, "$lt": end}})          
+        .sort({createdAt: 'descending'})
+        .populate('problem')
+
+      today = new Date()
+      /* istanbul ignore next */
+      if(!lastQueue){
+        if(today >= (openTime - 30*600000)){
+          checkIn = delayCheckIn(today, 30)
+        
+        } else {
+
+          checkIn.setHours(openHour)
+          checkIn.setMinutes(openMinute)
+          checkIn.setSeconds(0)
+        }
+      } else {
+        today = new Date()
+        if(lastQueue.checkIn < today){
+          checkIn = delayCheckIn(today, 30)
+        }else {
+          let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
+          console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
+          if(latestSolved > closeTime ){
+            next({
+              code: 403,
+              message: "the queue already beyond closing time"
+            })
+          }
+          checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
+        }
+        
+      console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+      }   
+
+      today = new Date()
+      /* istanbul ignore next */
+      if(checkIn > closeTime ){
+        next({
+          code: 403,
+          message: "the queue already beyond closing time"
+        })
+      }
+      const companyId = req.params.companyId
+      const userId = req.decode._id
+
+      const newData = {
+        companyId,
+        userId,
+        problem,
+        duration,
+        checkIn
+      }
+
+      res.json({
+        companyId,
+        userId,
+        problem,
+        duration,
+        checkIn
+      })
+
+    } catch{
+      next()
+    }
+
+      
   }
   
   static async create(req,res,next){
@@ -232,7 +393,6 @@ class QueueLogController {
       })
       
       if(newQueue){
-        console.log(req.decode , " <<<<<<<<<<<<<<<<")
         const pushedQueue = await Company.updateOne(
           {
             _id: req.params.companyId
@@ -248,15 +408,11 @@ class QueueLogController {
         )
 
       }
-      
 
       res.status(201).json(newQueue)
     } catch(err) {
       next(err)
     }
-    
-    
-
   }
 
 
