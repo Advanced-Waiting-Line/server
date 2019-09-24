@@ -133,20 +133,20 @@ describe("POST /companies/login", function () {
 //========== QueueLog Test ==========
 describe(`queue test`, function(){
   this.timeout(10000)
-  describe("GET /problems", function () {
-    it("Success create prolem with status 201", function (done) {
-      chai
-        .request(app)
-        .get("/problems")
-        .end(function (err, res) {
-          problemId =  res.body._id
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an("array")
-          done();
-        })
-    })
-  })
+  // describe("GET /problems", function () {
+  //   it("Success create prolem with status 201", function (done) {
+  //     chai
+  //       .request(app)
+  //       .get("/problems")
+  //       .end(function (err, res) {
+  //         problemId =  res.body._id
+  //         expect(err).to.be.null;
+  //         expect(res).to.have.status(200);
+  //         expect(res.body).to.be.an("array")
+  //         done();
+  //       })
+  //   })
+  // })
 
   describe("GET /:companyId", function () {
     it("Success get prolem by company id with status 200", function (done) {
@@ -159,6 +159,18 @@ describe(`queue test`, function(){
           expect(res).to.have.status(200);
           expect(res.body).to.be.an("array")
           done();
+        })
+    })
+    it("Error when get prolem by company id with invalid companyId", function (done) {
+      chai
+        .request(app)
+        .get(`/problems/${"invalidId"}`)
+        .set('token', companyToken)
+        .end(function (err, res) {
+          expect(res).to.have.status(500)
+          expect(res.body).to.be.an("object")
+          expect(res.body).to.have.keys("message", "code")
+          done()
         })
     })
   })

@@ -195,7 +195,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(500)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message","code")
         done()
       })
     })
@@ -206,7 +206,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(401)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
@@ -301,7 +301,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(404)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message","code")
         done()
       })
     })
@@ -319,7 +319,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(404)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
@@ -337,7 +337,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(500)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
@@ -354,7 +354,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(401)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message","code")
         done()
       })
     })
@@ -387,7 +387,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(500)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message","code")
         done()
       })
     })
@@ -415,7 +415,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(500)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
@@ -446,7 +446,7 @@ describe(`queue test`, function(){
       .end(function(err,res){
         expect(res).to.have.status(404)
         expect(res.body).to.be.an("object")
-        expect(res.body).to.have.keys("message")
+        expect(res.body).to.have.keys("message", "code")
         done()
       })
     })
