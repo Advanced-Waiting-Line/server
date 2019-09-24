@@ -9,6 +9,11 @@ class CompanyAPI extends RESTDataSource {
     const companies = await this.get(`findAll`);
     return companies
   }
+
+  async findCompanyById(id){
+    const company = await this.get(`findOne/${id}`)
+    return company
+  }
     
 }
 
