@@ -1,6 +1,7 @@
 const User = require('../model/User')
 const { comparePassword } = require('../helpers/bcryptjs')
 const { generateToken } = require('../helpers/jwt')
+const db = require('../extend appjs/firestore')
 // const { OAuth2Client } = require('google-auth-library');
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -15,6 +16,10 @@ class UserController {
     req.body.location && (input.location = req.body.location)
     User.create(input)
       .then((user) => {
+        // res.status(201).json(user)
+        return Promise.all([db.collection('awansub').add({ awan: true }), user])
+      })
+      .then(([result, user])=>{
         res.status(201).json(user)
       })
       .catch(next)
@@ -34,13 +39,22 @@ class UserController {
             }
             let token = generateToken(payload)
 
-            res.status(200).json({
+            // res.status(200).json({
+            //   token,
+            //   _id: user._id,
+            //   name: user.name,
+            //   email: user.email,
+            //   isAdmin: user.isAdmin
+            // })
+
+            let result = {
               token,
-              _id: user._id,
-              name: user.name,
-              email: user.email,
-              isAdmin: user.isAdmin
-            })
+              _id: company._id,
+              name: company.name,
+              email: company.email,
+              isAdmin: company.isAdmin
+            }
+            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -49,6 +63,9 @@ class UserController {
         else {
           throw { code: 401, message: "wrong email/password" }
         }
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
@@ -66,8 +83,13 @@ class UserController {
       _id: req.params.id
     }, input)
       .then((result) => {
-        res.status(200).json(result)
+        // res.status(200).json(result)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), result])
       })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
+      })
+      .catch(next)
   }
 
   static delete(req,res,next){
@@ -75,7 +97,11 @@ class UserController {
       _id: req.params.id
     })
       .then((result) =>{
-        res.status(200).json(result)
+        // res.status(200).json(result)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
@@ -85,7 +111,11 @@ class UserController {
       _id: req.params.id
     })
       .then((user)=>{
-        res.status(200).json(user)
+        // res.status(200).json(user)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), user])
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
