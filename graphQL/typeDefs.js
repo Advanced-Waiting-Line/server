@@ -169,12 +169,15 @@ const typeDefs = gql`
     createQueue(
       token: String 
       companyId: String
-      problemId: String)
+      problemId: String
+      distance: Int
+      )
     :QueueLog
     getPreview(
       token: String 
       companyId: String
       problemId: String
+      distance: Int
     ):Preview
     updateDurationQueue(
       token: String
