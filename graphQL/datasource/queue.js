@@ -35,7 +35,8 @@ class QueueAPI extends RESTDataSource {
             openTime: queue.companyId.openTime,
             closeTime: queue.companyId.closeTime,
             location: queue.companyId.location,
-            queue: queue.companyId.queue
+            queue: queue.companyId.queue,
+            name: queue.companyId.name
           },
           userId: {
               _id: queue.userId._id,
