@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 if (process.env.NODE_ENV=='test') {
   require('dotenv').config()
 }
@@ -5,6 +6,7 @@ if (process.env.NODE_ENV=='test') {
 module.exports = () => {
   const mongoose = require('mongoose')
   // === database ===
+  /* istanbul ignore if */
   if (process.env.NODE_ENV=='test'){
       mongoose.connect(`mongodb://localhost/${process.env.MONGODB_COLLECTION}-${process.env.NODE_ENV}`, 
     { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, function (err) {

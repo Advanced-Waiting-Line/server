@@ -43,21 +43,21 @@ class CompanyController {
             }
             let token = generateToken(payload)
 
-            // res.status(200).json({
-            //   token,
-            //   _id: company._id,
-            //   name: company.name,
-            //   email: company.email,
-            //   isAdmin: company.isAdmin
-            // })
-
-            let result = {
+            res.status(200).json({
               token,
               _id: company._id,
               name: company.name,
-              email: company.email
-            }
-            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+              email: company.email,
+              isAdmin: company.isAdmin
+            })
+
+            // let result = {
+            //   token,
+            //   _id: company._id,
+            //   name: company.name,
+            //   email: company.email
+            // }
+            // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -67,9 +67,9 @@ class CompanyController {
           throw { code: 401, message: "wrong email/password" }
         }
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
@@ -91,12 +91,12 @@ class CompanyController {
       }
     })
       .then((companies)=>{
-        // res.status(200).json(companies)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
+        res.status(200).json(companies)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
@@ -109,12 +109,12 @@ class CompanyController {
       populate: ['userId', 'problem'],
     })
       .then((company)=>{
-        // res.status(200).json(company)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), company])
+        res.status(200).json(company)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), company])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 

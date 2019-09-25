@@ -39,22 +39,22 @@ class UserController {
             }
             let token = generateToken(payload)
 
-            // res.status(200).json({
-            //   token,
-            //   _id: user._id,
-            //   name: user.name,
-            //   email: user.email,
-            //   isAdmin: user.isAdmin
-            // })
-
-            let result = {
+            res.status(200).json({
               token,
               _id: user._id,
               name: user.name,
               email: user.email,
               isAdmin: user.isAdmin
-            }
-            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+            })
+
+            // let result = {
+            //   token,
+            //   _id: user._id,
+            //   name: user.name,
+            //   email: user.email,
+            //   isAdmin: user.isAdmin
+            // }
+            // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -64,9 +64,9 @@ class UserController {
           throw { code: 401, message: "wrong email/password" }
         }
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
@@ -113,12 +113,12 @@ class UserController {
       _id: req.params.id
     })
       .then((user)=>{
-        // res.status(200).json(user)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), user])
+        res.status(200).json(user)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), user])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 

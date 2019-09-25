@@ -13,6 +13,7 @@ let UserSchema = new Schema ({
   },
   image : {
     type: String,
+    required: [true, 'image cannot be empty']
   },
   email: {
     type: String,

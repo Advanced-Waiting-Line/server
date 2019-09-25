@@ -21,6 +21,7 @@ let CompanySchema = new Schema ({
   },
   image : {
     type: String,
+    required: [true, 'image cannot be empty']
     
   },
   location: {
