@@ -87,8 +87,8 @@ class QueueLogController {
         currentDay :  cd,
         lastDay : ld
       })
-    } catch(err){
-      next()
+    } catch(err){      /* istanbul ignore next */
+      next(err)
     }
   }
 
@@ -163,8 +163,10 @@ class QueueLogController {
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
         companyId: req.params.companyId
-      })
+      })       
+      /* istanbul ignore if */
       if(!foundProblem){
+         /* istanbul ignore next */
         next({
           status: 404,
           message: "problem doesn't exist"
@@ -267,12 +269,12 @@ class QueueLogController {
       })
 
     } catch(err) {
+      /* istanbul ignore next */
       next(err)
     }
   }
   
   static async create(req,res,next){
-    console.log(req.params)
     try{
 
       //handle distance location
