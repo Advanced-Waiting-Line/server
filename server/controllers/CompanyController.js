@@ -69,7 +69,7 @@ class CompanyController {
         }
       })
       .then(([firestore, result])=>{
-        res.status(201).json(result)
+        res.status(200).json(result)
       })
       .catch(next)
   }
@@ -96,7 +96,7 @@ class CompanyController {
         return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
       })
       .then(([firestore, result])=>{
-        res.status(201).json(result)
+        res.status(200).json(result)
       })
       .catch(next)
   }
@@ -114,7 +114,7 @@ class CompanyController {
         return Promise.all([ db.collection('awansub').add({ awan: true }), company])
       })
       .then(([firestore, result])=>{
-        res.status(201).json(result)
+        res.status(200).json(result)
       })
       .catch(next)
   }
