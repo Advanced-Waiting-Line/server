@@ -1,4 +1,5 @@
 const Problem = require('../model/Problem')
+const db = require('../extend appjs/firestore')
 
 class ProblemController {
   // static findAll(req,res,next){
@@ -62,6 +63,10 @@ class ProblemController {
       new: true
     })
     .then(result=>{
+      return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+      // res.json(result)
+    })
+    .then(([firebase, result])=> {
       res.json(result)
     })
     .catch(next)

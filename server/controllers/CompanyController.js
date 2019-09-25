@@ -1,8 +1,10 @@
 const Company = require('../model/Company')
 const { comparePassword } = require('../helpers/bcryptjs')
 const { generateToken } = require('../helpers/jwt')
+const db = require('../extend appjs/firestore')
 // const { OAuth2Client } = require('google-auth-library');
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 class CompanyController {
   static register(req, res, next) {
@@ -19,6 +21,9 @@ class CompanyController {
     console.log(req.body)
     Company.create(input)
       .then((company) => {
+        return Promise.all([db.collection('awansub').add({ awan: true }), company]) 
+      })
+      .then(([result, company])=>{
         res.status(201).json(company)
       })
       .catch(next)
@@ -38,13 +43,22 @@ class CompanyController {
             }
             let token = generateToken(payload)
 
-            res.status(200).json({
+            // res.status(200).json({
+            //   token,
+            //   _id: company._id,
+            //   name: company.name,
+            //   email: company.email,
+            //   isAdmin: company.isAdmin
+            // })
+
+            let result = {
               token,
               _id: company._id,
               name: company.name,
               email: company.email,
               isAdmin: company.isAdmin
-            })
+            }
+            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -53,6 +67,9 @@ class CompanyController {
         else {
           throw { code: 401, message: "wrong email/password" }
         }
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
@@ -75,7 +92,11 @@ class CompanyController {
       }
     })
       .then((companies)=>{
-        res.status(200).json(companies)
+        // res.status(200).json(companies)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
@@ -89,7 +110,11 @@ class CompanyController {
       populate: ['userId', 'problem'],
     })
       .then((company)=>{
-        res.status(200).json(company)
+        // res.status(200).json(company)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), company])
+      })
+      .then(([firestore, result])=>{
+        res.status(201).json(result)
       })
       .catch(next)
   }
