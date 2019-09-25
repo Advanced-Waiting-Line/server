@@ -241,7 +241,7 @@ class QueueLogController {
           }
           checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
           today = new Date()
-          if((today+(distance*60000)) > latestSolved){
+          if((today.getTime()+(distance*60000)) > latestSolved){
             checkIn = delayCheckIn(today, distance)
           }
         }
