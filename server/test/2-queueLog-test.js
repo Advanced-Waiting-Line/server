@@ -264,12 +264,35 @@ describe(`queue test`, function(){
       })
     })
   })
+  describe('POST /queueLogs/preview/:companyId', function(){
+    it('Create queueLog with status 201', function (done){
+
+      let input = {
+        problem: problemId, // Cari ID
+        distance: 600
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/preview/${companyId}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        queueLogId = res.body._id
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("companyId", "userId", "duration", "problem", "checkIn")
+        done()
+      })
+    })
+  })
 
   describe('POST /queueLogs/:companyId', function(){
     it('Create queueLog with status 201', function (done){
 
       let input = {
         problem: problemId, // Cari ID
+        distance: 600
       };
       chai
       .request(app)
@@ -290,6 +313,7 @@ describe(`queue test`, function(){
 
       let input = {
         problem: problemId, // Cari ID
+        distance: 600,
       };
       chai
       .request(app)
@@ -467,6 +491,42 @@ describe(`queue test`, function(){
         done()
       })
     })
+  })
+
+  describe('GET /queueLogs/weekly', function(){
+    it('get weekly data growth percentage', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs/weekly`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("percentage", "currentWeek", "lastWeek")
+        done()
+      })
+    })
+
+    
+  })
+
+  describe('GET /queueLogs/daily', function(){
+    it('get daily data growth percentage', function (done){
+      chai
+      .request(app)
+      .get(`/queueLogs/daily`)
+      .set('token', companyToken)
+      .end(function(err,res){
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("percentage", "currentDay", "lastDay")
+        done()
+      })
+    })
+
+    
   })
 
 })

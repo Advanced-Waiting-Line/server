@@ -35,7 +35,8 @@ class QueueAPI extends RESTDataSource {
             openTime: queue.companyId.openTime,
             closeTime: queue.companyId.closeTime,
             location: queue.companyId.location,
-            queue: queue.companyId.queue
+            queue: queue.companyId.queue,
+            name: queue.companyId.name
           },
           userId: {
               _id: queue.userId._id,
@@ -99,9 +100,10 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
-    async createQueue(token, id, problemId){
+    async createQueue(token, id, problemId, distance){
         const payload = {
-            problem: problemId
+            problem: problemId,
+            distance
         }
         const response = await this.post(`${id}`, payload, 
             {
@@ -112,9 +114,10 @@ class QueueAPI extends RESTDataSource {
         return this.queueReducer(response)
     }
 
-    async getPreview(token, id, problemId){
+    async getPreview(token, id, problemId,distance){
         const payload = {
-            problem: problemId
+            problem: problemId,
+            distance
         }
         const response = await this.post(`/preview/${id}`, payload, 
             {
