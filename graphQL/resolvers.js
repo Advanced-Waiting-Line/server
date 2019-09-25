@@ -114,13 +114,13 @@ const resolvers = {
       return data
     },
     
-    createQueue: async (_, {token, companyId, problemId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.createQueue(token, companyId, problemId)
+    createQueue: async (_, {token, companyId, problemId, distance}, {dataSources}) => {
+      const result = await dataSources.queueAPI.createQueue(token, companyId, problemId, distance)
       return result  
     },
 
-    getPreview: async (_, {token, companyId, problemId}, {dataSources}) => {
-      const result = await dataSources.queueAPI.getPreview(token, companyId, problemId)
+    getPreview: async (_, {token, companyId, problemId, distance}, {dataSources}) => {
+      const result = await dataSources.queueAPI.getPreview(token, companyId, problemId,distance)
       return result  
     },
 

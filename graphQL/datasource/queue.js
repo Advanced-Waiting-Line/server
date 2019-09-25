@@ -99,9 +99,10 @@ class QueueAPI extends RESTDataSource {
         return result
     }
 
-    async createQueue(token, id, problemId){
+    async createQueue(token, id, problemId, distance){
         const payload = {
-            problem: problemId
+            problem: problemId,
+            distance
         }
         const response = await this.post(`${id}`, payload, 
             {
@@ -112,9 +113,10 @@ class QueueAPI extends RESTDataSource {
         return this.queueReducer(response)
     }
 
-    async getPreview(token, id, problemId){
+    async getPreview(token, id, problemId,distance){
         const payload = {
-            problem: problemId
+            problem: problemId,
+            distance
         }
         const response = await this.post(`/preview/${id}`, payload, 
             {

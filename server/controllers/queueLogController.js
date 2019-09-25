@@ -154,12 +154,16 @@ class QueueLogController {
 
   static async preview(req,res,next){
     try{
+
+      //handle distance location
+      let distance = Math.ceil(req.body.distance/60)
+
+
       //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
         companyId: req.params.companyId
       })
-      console.log(foundProblem)
       if(!foundProblem){
         next({
           status: 404,
@@ -196,7 +200,7 @@ class QueueLogController {
       //handle checkin time
       let checkIn = new Date()
       today = new Date()
-      const start = new Date(today.setHours(6))
+      const start = new Date(today.setHours(1))
       const end = new Date(today.setHours(23))
     
       const lastQueue = await QueueLog
@@ -209,11 +213,11 @@ class QueueLogController {
       today = new Date()
       /* istanbul ignore next */
       if(!lastQueue){
-        if(today >= (openTime - 30*600000)){
-          checkIn = delayCheckIn(today, 30)
-        
+        if(today >= (openTime - distance*60000)){
+          checkIn = delayCheckIn(today, distance)
+          
         } else {
-
+          
           checkIn.setHours(openHour)
           checkIn.setMinutes(openMinute)
           checkIn.setSeconds(0)
@@ -221,7 +225,7 @@ class QueueLogController {
       } else {
         today = new Date()
         if(lastQueue.checkIn < today){
-          checkIn = delayCheckIn(today, 30)
+          checkIn = delayCheckIn(today, distance)
         }else {
           let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
           console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
@@ -234,6 +238,7 @@ class QueueLogController {
           checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
         }
         
+        console.log(distance, "distance")
       console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
       }   
 
@@ -248,14 +253,11 @@ class QueueLogController {
       const companyId = req.params.companyId
       const userId = req.decode._id
 
-      const newData = {
-        companyId,
-        userId,
-        problem,
-        duration,
-        checkIn
-      }
-
+      console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
+      console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
+      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
+      
       res.json({
         companyId,
         userId,
@@ -272,13 +274,16 @@ class QueueLogController {
   static async create(req,res,next){
     console.log(req.params)
     try{
+
+      //handle distance location
+      let distance = Math.ceil(req.body.distance/60)
+
+
       //handle problem
       const foundProblem = await Problem.findOne({
         _id: req.body.problem,
         companyId: req.params.companyId
       })
-
-      console.log(foundProblem)
       if(!foundProblem){
         next({
           status: 404,
@@ -315,7 +320,7 @@ class QueueLogController {
       //handle checkin time
       let checkIn = new Date()
       today = new Date()
-      const start = new Date(today.setHours(6))
+      const start = new Date(today.setHours(1))
       const end = new Date(today.setHours(23))
     
       const lastQueue = await QueueLog
@@ -328,11 +333,11 @@ class QueueLogController {
       today = new Date()
       /* istanbul ignore next */
       if(!lastQueue){
-        if(today >= (openTime - 30*600000)){
-          checkIn = delayCheckIn(today, 30)
-        
+        if(today >= (openTime - distance*60000)){
+          checkIn = delayCheckIn(today, distance)
+          
         } else {
-
+          
           checkIn.setHours(openHour)
           checkIn.setMinutes(openMinute)
           checkIn.setSeconds(0)
@@ -340,7 +345,7 @@ class QueueLogController {
       } else {
         today = new Date()
         if(lastQueue.checkIn < today){
-          checkIn = delayCheckIn(today, 30)
+          checkIn = delayCheckIn(today, distance)
         }else {
           let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
           console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
@@ -353,6 +358,7 @@ class QueueLogController {
           checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
         }
         
+        console.log(distance, "distance")
       console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
       }   
 
@@ -367,15 +373,7 @@ class QueueLogController {
       
       const companyId = req.params.companyId
       const userId = req.decode._id
-        
-      const newData = {
-        companyId,
-        userId,
-        problem,
-        duration,
-        checkIn
-      }
-      
+             
       console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
       console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
       console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
@@ -408,6 +406,7 @@ class QueueLogController {
       }
 
       res.status(201).json(newQueue)
+    
     } catch(err) {
       next(err)
     }
