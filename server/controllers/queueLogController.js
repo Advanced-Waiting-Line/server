@@ -147,6 +147,7 @@ class QueueLogController {
     })
     .populate('problem')
     .populate('companyId')
+    .sort({createdAt: 'descending'})
     .then(result=>{
       res.json(result)
     })
@@ -239,6 +240,10 @@ class QueueLogController {
             })
           }
           checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
+          today = new Date()
+          if((today+(distance*60000)) > latestSolved){
+            checkIn = delayCheckIn(today, distance)
+          }
         }
         
         console.log(distance, "distance")
@@ -454,6 +459,8 @@ class QueueLogController {
           duration: duration
         }
       }) 
+      await db.collection('awansub').add({ awan: true })
+
       res.status(200).json({
         message: "duration updated"
       })
@@ -468,7 +475,7 @@ class QueueLogController {
     try{
       const removedQueue = await Company.updateOne({
         _id: req.decode._id
-      },{
+        },{
         $pull:{
           queue: req.params.queueLogId
         }
