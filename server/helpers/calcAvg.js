@@ -9,9 +9,11 @@ module.exports = function calcAvg(num1, num2) {
           if (str[i + 1] == 0) {
               result = str.slice(0, -3)
           } else {
+            /* istanbul ignore next */
               result = str.slice(0, -1)
           }
         } else {
+          /* istanbul ignore next */
             result = str;
         }
       }

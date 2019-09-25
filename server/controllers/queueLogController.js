@@ -390,22 +390,21 @@ class QueueLogController {
             status: false
       })
       
-      if(newQueue){
-        await Company.updateOne(
-          {
-            _id: req.params.companyId
-          }, 
-          {
-            $addToSet:{
-              queue: newQueue._id
-            }
-          },
-          {
-            new: true
+      await Company.updateOne(
+        {
+          _id: req.params.companyId
+        }, 
+        {
+          $addToSet:{
+            queue: newQueue._id
           }
-        )
+        },
+        {
+          new: true
+        }
+      )
 
-      }
+      
 
       res.status(201).json(newQueue)
     
@@ -471,6 +470,14 @@ class QueueLogController {
       },{
         $pull:{
           queue: req.params.queueLogId
+        }
+      })
+
+      const updateStatus = await QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $set:{
+          status: true
         }
       })
 
