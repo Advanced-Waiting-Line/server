@@ -285,6 +285,24 @@ describe(`queue test`, function(){
         done()
       })
     })
+    it('Should error when Create queueLog with invalid problem', function (done){
+
+      let input = {
+        problem: "5d847d34b203fa4684aaaaaa", // Cari ID
+        distance: 600
+      };
+      chai
+      .request(app)
+      .post(`/queueLogs/preview/${companyId}`)
+      .send(input)
+      .set('token', userToken)
+      .end(function(err,res){
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an("object")
+        expect(res.body).to.have.keys("message","code")
+        done()
+      })
+    })
   })
 
   describe('POST /queueLogs/:companyId', function(){
@@ -530,3 +548,18 @@ describe(`queue test`, function(){
   })
 
 })
+
+
+const calcAvg = require('../helpers/calcAvg')
+
+describe('average calculation test', function() {
+    it('no fraction', function() {
+      expect(calcAvg(5,10)).to.equal(-50);
+    })
+    it('fraction fixed 2', function() {
+      expect(calcAvg(543,432)).to.equal(20.44);
+    })
+    it('fraction fixed 1', function() {
+      expect(calcAvg(205,1000)).to.equal(-79.5);
+    })
+});
