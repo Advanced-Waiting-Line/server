@@ -49,10 +49,10 @@ class UserController {
 
             let result = {
               token,
-              _id: company._id,
-              name: company.name,
-              email: company.email,
-              isAdmin: company.isAdmin
+              _id: user._id,
+              name: user.name,
+              email: user.email,
+              isAdmin: user.isAdmin
             }
             return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
@@ -79,19 +79,18 @@ class UserController {
     req.body.password && (input.password = req.body.password)
     req.body.location && (input.location = req.body.location)
 
-    console.log('masuk update nih')
     User.findOneAndUpdate({
       _id: req.params.id
     }, input,{
       new: true
     })
       .then((result) => {
-        res.status(200).json(result)
-        // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+        // res.status(200).json(result)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), result])
       })
-      // .then(([firestore, result])=>{
-      //   res.status(201).json(result)
-      // })
+      .then(([firestore, result])=>{
+        res.status(200).json(result)
+      })
       .catch(next)
   }
 
@@ -100,12 +99,12 @@ class UserController {
       _id: req.params.id
     })
       .then((result) =>{
-        res.status(200).json(result)
-        // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+        // res.status(200).json(result)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), result])
       })
-      // .then(([firestore, result])=>{
-      //   res.status(201).json(result)
-      // })
+      .then(([firestore, result])=>{
+        res.status(200).json(result)
+      })
       .catch(next)
   }
 
@@ -114,12 +113,12 @@ class UserController {
       _id: req.params.id
     })
       .then((user)=>{
-        res.status(200).json(user)
-        // return Promise.all([ db.collection('awansub').add({ awan: true }), user])
+        // res.status(200).json(user)
+        return Promise.all([ db.collection('awansub').add({ awan: true }), user])
       })
-      // .then(([firestore, result])=>{
-      //   res.status(201).json(result)
-      // })
+      .then(([firestore, result])=>{
+        res.status(200).json(result)
+      })
       .catch(next)
   }
 
