@@ -113,12 +113,12 @@ class UserController {
       _id: req.params.id
     })
       .then((user)=>{
-        // res.status(200).json(user)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), user])
+        res.status(200).json(user)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), user])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
