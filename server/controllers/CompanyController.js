@@ -91,12 +91,12 @@ class CompanyController {
       }
     })
       .then((companies)=>{
-        // res.status(200).json(companies)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
+        res.status(200).json(companies)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), companies])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
@@ -109,12 +109,12 @@ class CompanyController {
       populate: ['userId', 'problem'],
     })
       .then((company)=>{
-        // res.status(200).json(company)
-        return Promise.all([ db.collection('awansub').add({ awan: true }), company])
+        res.status(200).json(company)
+        // return Promise.all([ db.collection('awansub').add({ awan: true }), company])
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
