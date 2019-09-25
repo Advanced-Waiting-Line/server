@@ -19,7 +19,11 @@ class ProblemController {
     .populate('companyId')
     .then(problems=>{
       res.json(problems)
+      // return Promise.all([ db.collection('awansub').add({ awan: true }), problems])
     })
+    // .then(([firestore, problems])=>{
+    //   res.json(problems)
+    // })
     .catch(err=>{
       next(err)
     })
@@ -34,8 +38,13 @@ class ProblemController {
       description,
       companyId
     }).then(problem =>{
+      // res.status(201).json(problem)
+      return Promise.all([ db.collection('awansub').add({ awan: true }), problem])
+    })
+    .then(([firestore, problem])=>{
       res.status(201).json(problem)
-    }).catch(next)
+    })
+    .catch(next)
   }
 
   static delete(req,res,next){
@@ -43,6 +52,10 @@ class ProblemController {
       _id: req.params.problemId
     })
     .then(result=>{
+      // res.json(result)
+      return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+    })
+    .then(([firestore, result])=>{
       res.json(result)
     })
     .catch(next)
