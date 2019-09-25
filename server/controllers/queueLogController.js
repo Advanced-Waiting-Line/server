@@ -147,6 +147,7 @@ class QueueLogController {
     })
     .populate('problem')
     .populate('companyId')
+    .sort({createdAt: 'descending'})
     .then(result=>{
       res.json(result)
     })
@@ -239,6 +240,10 @@ class QueueLogController {
             })
           }
           checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
+          today = new Date()
+          if((today+(distance*60000)) > latestSolved){
+            checkIn = delayCheckIn(today, distance)
+          }
         }
         
         console.log(distance, "distance")
