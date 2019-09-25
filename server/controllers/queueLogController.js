@@ -169,7 +169,7 @@ class QueueLogController {
       /* istanbul ignore if */
       if(!foundProblem){
          /* istanbul ignore next */
-        next({
+        return next({
           status: 404,
           message: "problem doesn't exist"
         })
