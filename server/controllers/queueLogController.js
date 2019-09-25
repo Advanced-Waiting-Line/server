@@ -4,6 +4,7 @@ const delayCheckIn = require('../helpers/checkInModifyer/delayCheckIn')
 const calcAvg = require('../helpers/calcAvg')
 const Company = require('../model/Company')
 const  options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+const db = require('../extend appjs/firestore')
 
 class QueueLogController {
   // static findAll(req,res,next){
@@ -361,7 +362,7 @@ class QueueLogController {
         }
         
         console.log(distance, "distance")
-      console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+        console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
       }   
 
       today = new Date()
@@ -403,8 +404,8 @@ class QueueLogController {
           new: true
         }
       )
-
-      
+        
+      await db.collection('awansub').add({ awan: true })
 
       res.status(201).json(newQueue)
     
@@ -544,7 +545,10 @@ class QueueLogController {
             })  
           });
         }        
-      }   
+      }
+
+      await db.collection('awansub').add({ awan: true })
+         
       res.status(200).json({
         message: "queue removed from list"
       })
@@ -567,8 +571,11 @@ class QueueLogController {
           status: !currentQueue.status
         }
       })
-      .then(result=>{
-        res.json(result)
+      .then(async result=>{
+        await db.collection('awansub').add({ awan: true })
+        res.json({
+          message: `status updated to ${!currentQueue.status}`
+        })
       })
     } else {
       next({
