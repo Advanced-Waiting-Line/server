@@ -7,7 +7,7 @@ module.exports = () => {
   // === database ===
   if (process.env.NODE_ENV=='test'){
       mongoose.connect(`mongodb://localhost/${process.env.MONGODB_COLLECTION}-${process.env.NODE_ENV}`, 
-    { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, function (err) {
       if (err) throw err
       else console.log('mongoose connected to mongodb localhost')
     })
@@ -15,7 +15,7 @@ module.exports = () => {
   else {
     /* istanbul ignore next: can't test cron */
     mongoose.connect(`mongodb+srv://mongodb:${process.env.MONGODB}@cluster0-qtldw.gcp.mongodb.net/${process.env.MONGODB_COLLECTION}?retryWrites=true&w=majority`, 
-    {useNewUrlParser: true, useUnifiedTopology: true}, function(err){
+    {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}, function(err){
       /* istanbul ignore next: can't test cron */
       if (err) throw err
       else console.log('mongoose connected to mongodb atlas')

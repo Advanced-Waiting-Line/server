@@ -84,6 +84,10 @@ class CompanyController {
     Company.findOne({
       _id: req.params.id
     })
+    .populate({
+      path: 'queue',
+      populate: ['userId', 'problem'],
+    })
       .then((company)=>{
         res.status(200).json(company)
       })

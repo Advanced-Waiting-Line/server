@@ -266,11 +266,9 @@ class QueueLogController {
         checkIn
       })
 
-    } catch{
-      next()
+    } catch(err) {
+      next(err)
     }
-
-      
   }
   
   static async create(req,res,next){
@@ -391,7 +389,7 @@ class QueueLogController {
       })
       
       if(newQueue){
-        const pushedQueue = await Company.updateOne(
+        await Company.updateOne(
           {
             _id: req.params.companyId
           }, 

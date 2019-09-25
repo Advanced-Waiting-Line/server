@@ -150,8 +150,8 @@ const resolvers = {
       const result = await dataSources.problemAPI.deleteProblem(token,problemId)
       return result
     },
-    updateProblem: async(_,{token, problemId, name, duration}, {dataSources}) => {
-      const result = await dataSources.problemAPI.updateProblem(token, problemId, name, duration)
+    updateProblem: async(_,{token, problemId, name, description, duration}, {dataSources}) => {
+      const result = await dataSources.problemAPI.updateProblem(token, problemId, name, description, duration)
       console.log(result)
       return result
     }
