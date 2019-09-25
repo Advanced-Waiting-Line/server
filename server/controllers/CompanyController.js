@@ -55,8 +55,7 @@ class CompanyController {
               token,
               _id: company._id,
               name: company.name,
-              email: company.email,
-              isAdmin: company.isAdmin
+              email: company.email
             }
             return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
