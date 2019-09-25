@@ -43,21 +43,21 @@ class CompanyController {
             }
             let token = generateToken(payload)
 
-            // res.status(200).json({
-            //   token,
-            //   _id: company._id,
-            //   name: company.name,
-            //   email: company.email,
-            //   isAdmin: company.isAdmin
-            // })
-
-            let result = {
+            res.status(200).json({
               token,
               _id: company._id,
               name: company.name,
-              email: company.email
-            }
-            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+              email: company.email,
+              isAdmin: company.isAdmin
+            })
+
+            // let result = {
+            //   token,
+            //   _id: company._id,
+            //   name: company.name,
+            //   email: company.email
+            // }
+            // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -67,9 +67,9 @@ class CompanyController {
           throw { code: 401, message: "wrong email/password" }
         }
       })
-      .then(([firestore, result])=>{
-        res.status(200).json(result)
-      })
+      // .then(([firestore, result])=>{
+      //   res.status(200).json(result)
+      // })
       .catch(next)
   }
 
