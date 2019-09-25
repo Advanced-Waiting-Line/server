@@ -26,9 +26,10 @@ class ProblemAPI extends RESTDataSource {
         return this.problemReducer(response)
     }
 
-    async updateProblem(token, problemId, name, duration){
+    async updateProblem(token, problemId, name, description, duration){
         const payload = {
             name,
+            description,
             duration
         }
         const response = await this.put(`${problemId}`,payload, {
@@ -56,7 +57,7 @@ class ProblemAPI extends RESTDataSource {
             _id: problem._id,
           name: problem.name,
           duration: problem.duration,
-          description: problem. description
+          description: problem.description
         }
     }
     
