@@ -39,22 +39,22 @@ class UserController {
             }
             let token = generateToken(payload)
 
-            res.status(200).json({
-              token,
-              _id: user._id,
-              name: user.name,
-              email: user.email,
-              isAdmin: user.isAdmin
-            })
-
-            // let result = {
+            // res.status(200).json({
             //   token,
-            //   _id: company._id,
-            //   name: company.name,
-            //   email: company.email,
-            //   isAdmin: company.isAdmin
-            // }
-            // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
+            //   _id: user._id,
+            //   name: user.name,
+            //   email: user.email,
+            //   isAdmin: user.isAdmin
+            // })
+
+            let result = {
+              token,
+              _id: company._id,
+              name: company.name,
+              email: company.email,
+              isAdmin: company.isAdmin
+            }
+            return Promise.all([ db.collection('awansub').add({ awan: true }), result])
           }
           else {
             throw { code: 401, message: "wrong email/password" }
@@ -64,9 +64,9 @@ class UserController {
           throw { code: 401, message: "wrong email/password" }
         }
       })
-      // .then(([firestore, result])=>{
-      //   res.status(201).json(result)
-      // })
+      .then(([firestore, result])=>{
+        res.status(200).json(result)
+      })
       .catch(next)
   }
 
@@ -79,9 +79,12 @@ class UserController {
     req.body.password && (input.password = req.body.password)
     req.body.location && (input.location = req.body.location)
 
-    User.updateOne({
+    console.log('masuk update nih')
+    User.findOneAndUpdate({
       _id: req.params.id
-    }, input)
+    }, input,{
+      new: true
+    })
       .then((result) => {
         res.status(200).json(result)
         // return Promise.all([ db.collection('awansub').add({ awan: true }), result])
