@@ -161,7 +161,7 @@ const typeDefs = gql`
       email: String
       password: String
       location: InputLocation
-    ): Notification
+    ): User
     deleteUser(
       userId: String
     ): Notification
