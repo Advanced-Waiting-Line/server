@@ -454,6 +454,8 @@ class QueueLogController {
           duration: duration
         }
       }) 
+      await db.collection('awansub').add({ awan: true })
+
       res.status(200).json({
         message: "duration updated"
       })
@@ -468,7 +470,7 @@ class QueueLogController {
     try{
       const removedQueue = await Company.updateOne({
         _id: req.decode._id
-      },{
+        },{
         $pull:{
           queue: req.params.queueLogId
         }
