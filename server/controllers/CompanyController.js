@@ -18,7 +18,7 @@ class CompanyController {
     req.body.email && (input.email = req.body.email)
     req.body.password && (input.password = req.body.password)
     req.body.queue && (input.queue = req.body.queue)
-    console.log(req.body)
+    // console.log(req.body)
     Company.create(input)
       .then((company) => {
         return Promise.all([db.collection('awansub').add({ awan: true }), company]) 

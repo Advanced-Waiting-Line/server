@@ -116,7 +116,7 @@ describe(`company test`, function(){
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(400)
-          console.log(res.body)
+          // console.log(res.body)
           // expect(res.body).to.have.all.keys('code', 'message');
           // expect(res.body.code).to.equal(400)
           // expect(res.body.message).to.equal(`Company validation failed: email: Email ${user.email} has been used`)

@@ -25,9 +25,9 @@ class QueueLogController {
   
       const seventh = new Date(today - 6.048e+8)
       const fourteenth = new Date(today - 1.21e+9)
-      console.log(today.toLocaleDateString("en-US", options), "today time in local <<<")
-      console.log(seventh.toLocaleDateString("en-US", options), "7th time in local <<<")
-      console.log(fourteenth.toLocaleDateString("en-US", options), "14th time in local <<<")
+      // console.log(today.toLocaleDateString("en-US", options), "today time in local <<<")
+      // console.log(seventh.toLocaleDateString("en-US", options), "7th time in local <<<")
+      // console.log(fourteenth.toLocaleDateString("en-US", options), "14th time in local <<<")
       
       const currentWeek = await QueueLog.find({
         "companyId": req.decode._id,
@@ -41,8 +41,8 @@ class QueueLogController {
 
       let cw = currentWeek.length
       let lw = lastWeek.length
-      console.log(cw, "first week data")
-      console.log(lw, "lasta week data")
+      // console.log(cw, "first week data")
+      // console.log(lw, "lasta week data")
 
       let percentage = calcAvg(cw,lw)
       res.json({
@@ -63,9 +63,9 @@ class QueueLogController {
   
       const todayStart = new Date(todayEnd - 8.64e+7)
       const yesterday = new Date(todayStart - 8.64e+7)
-      console.log(todayStart.toLocaleDateString("en-US", options), "today start in local <<<")
-      console.log(todayEnd.toLocaleDateString("en-US", options), "today end in local <<<")
-      console.log(yesterday.toLocaleDateString("en-US", options), "yesterday in local <<<")
+      // console.log(todayStart.toLocaleDateString("en-US", options), "today start in local <<<")
+      // console.log(todayEnd.toLocaleDateString("en-US", options), "today end in local <<<")
+      // console.log(yesterday.toLocaleDateString("en-US", options), "yesterday in local <<<")
       
       const thisDay = await QueueLog.find({
         "companyId": req.decode._id,
@@ -79,8 +79,8 @@ class QueueLogController {
 
       let cd = thisDay.length
       let ld = lastDay.length
-      console.log(cd, "this day data")
-      console.log(ld, "last day data")
+      // console.log(cd, "this day data")
+      // console.log(ld, "last day data")
 
       let percentage = calcAvg(cd,ld)
       res.json({
@@ -134,8 +134,6 @@ class QueueLogController {
     .populate('companyId')
     .populate('userId')
     .then(queues=>{
-      console.log('dari controller')
-      console.log(queues)
       res.json(queues)
     }).catch(next)
     
@@ -186,7 +184,7 @@ class QueueLogController {
 
       //handle open & close time
       let today = new Date()
-      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      // console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
       const openHour = currentCompany.openTime.getHours()
       const openMinute = currentCompany.openTime.getMinutes()
 
@@ -231,7 +229,7 @@ class QueueLogController {
       } else {
         today = new Date()
         let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
-        console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
+        // console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
         if(lastQueue.checkIn < today){
           checkIn = delayCheckIn(today, distance)
         }else {
@@ -248,8 +246,8 @@ class QueueLogController {
           }
         }
         
-        console.log(distance, "distance")
-      console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+        // console.log(distance, "distance")
+      // console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
       }   
 
       today = new Date()
@@ -263,10 +261,10 @@ class QueueLogController {
       const companyId = req.params.companyId
       const userId = req.decode._id
 
-      console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
-      console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
-      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
-      console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
+      // console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
+      // console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
+      // console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      // console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
       
       res.json({
         companyId,
@@ -312,7 +310,7 @@ class QueueLogController {
 
       //handle open & close time
       let today = new Date()
-      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      // console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
       const openHour = currentCompany.openTime.getHours()
       const openMinute = currentCompany.openTime.getMinutes()
 
@@ -358,7 +356,7 @@ class QueueLogController {
       } else {
         today = new Date()
         let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
-        console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
+        // console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
         if(lastQueue.checkIn < today){
           checkIn = delayCheckIn(today, distance)
         }else {
@@ -372,7 +370,7 @@ class QueueLogController {
         }
         
         console.log(distance, "distance")
-        console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
+      //   console.log(lastQueue.checkIn.toLocaleDateString("en-US", options), "latest checkin time in local <<<")
       }   
 
       today = new Date()
@@ -387,10 +385,10 @@ class QueueLogController {
       const companyId = req.params.companyId
       const userId = req.decode._id
              
-      console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
-      console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
-      console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
-      console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
+      // console.log(openTime.toLocaleDateString("en-US", options), "open time in local <<<")
+      // console.log(closeTime.toLocaleDateString("en-US", options), "close time in local <<<")
+      // console.log(today.toLocaleDateString("en-US", options), "current time in local <<<")
+      // console.log(checkIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
       const newQueue = await QueueLog.create({
             companyId,
@@ -513,18 +511,18 @@ class QueueLogController {
             checkIn: {"$gt": currentCheckIn, "$lt": end}
       })    
 
-      console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
-      console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
+      // console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
+      // console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
       const currentEnd = new Date(currentCheckIn.getTime() + (backUpDuration*60000))
-      console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
+      // console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
 
       if(nextQueue.length > 0){
-        console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
+        // console.log(nextQueue[0].checkIn.toLocaleDateString("en-US", options), "next checkin time in local <<<")
         let today = new Date()
         let adjusted = new Date(nextQueue[0].checkIn - ((nextQueue[0].checkIn.getTime()) - today))
-        console.log(adjusted)
-        console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
+        // console.log(adjusted)
+        // console.log(adjusted.toLocaleDateString("en-US", options), "adjusted time in local <<<")
         let currentTime = new Date()
         /* istanbul ignore next */
         if(currentTime >= currentCheckIn){
