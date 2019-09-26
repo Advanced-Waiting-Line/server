@@ -182,7 +182,7 @@ class QueueLogController {
 
       const currentCompany = await Company.findOne({
         _id: req.params.companyId
-      })
+      }).populate('queue')
 
       //handle open & close time
       let today = new Date()
@@ -216,15 +216,17 @@ class QueueLogController {
 
       today = new Date()
       /* istanbul ignore next */
-      if(!lastQueue){
+      if(currentCompany.queue.length == 0){
         if(today >= (openTime - distance*60000)){
-          checkIn = delayCheckIn(today, distance)
-          
+          checkIn = delayCheckIn(today, distance)          
         } else {
-          
-          checkIn.setHours(openHour)
-          checkIn.setMinutes(openMinute)
-          checkIn.setSeconds(0)
+          if(today > openTime){
+            checkIn = delayCheckIn(today, distance)
+          } else {
+            checkIn.setHours(openHour)
+            checkIn.setMinutes(openMinute)
+            checkIn.setSeconds(0)
+          }
         }
       } else {
         today = new Date()
@@ -306,7 +308,7 @@ class QueueLogController {
 
       const currentCompany = await Company.findOne({
         _id: req.params.companyId
-      })
+      }).populate('queue')
 
       //handle open & close time
       let today = new Date()
@@ -340,15 +342,18 @@ class QueueLogController {
 
       today = new Date()
       /* istanbul ignore next */
-      if(!lastQueue){
+      if(currentCompany.queue.length == 0){
         if(today >= (openTime - distance*60000)){
           checkIn = delayCheckIn(today, distance)
           
         } else {
-          
-          checkIn.setHours(openHour)
-          checkIn.setMinutes(openMinute)
-          checkIn.setSeconds(0)
+          if(today > openTime){
+            checkIn = delayCheckIn(today, distance)
+          } else {
+            checkIn.setHours(openHour)
+            checkIn.setMinutes(openMinute)
+            checkIn.setSeconds(0)
+          }
         }
       } else {
         today = new Date()
@@ -439,7 +444,7 @@ class QueueLogController {
       .find({
         companyId: req.decode._id,
         checkIn: {"$gt": currentCheckIn, "$lt": end}
-      })         
+      })
       
       if(nextQueue.length > 0){
         nextQueue.forEach( async queue => {
@@ -481,18 +486,20 @@ class QueueLogController {
         }
       })
 
-      const updateStatus = await QueueLog.updateOne({
-        _id: req.params.queueLogId
-      },{
-        $set:{
-          status: true
-        }
-      })
-
       const currentQueue = await QueueLog.findOne({
         _id: req.params.queueLogId
       })
       .populate('problem')
+
+      const backUpDuration = currentQueue.duration
+
+      const updateStatus = await QueueLog.updateOne({
+        _id: req.params.queueLogId
+      },{
+        $set:{
+          status: true  
+        }
+      })
 
      
       let currentCheckIn = new Date(currentQueue.checkIn)    
@@ -509,7 +516,7 @@ class QueueLogController {
       console.log(new Date().toLocaleDateString("en-US", options), "current time in local <<<")
       console.log(currentCheckIn.toLocaleDateString("en-US", options), "checkin time in local <<<")
 
-      const currentEnd = new Date(currentCheckIn.getTime() + (currentQueue.problem.duration*60000))
+      const currentEnd = new Date(currentCheckIn.getTime() + (backUpDuration*60000))
       console.log(currentEnd.toLocaleDateString("en-US", options), "current queue end time in local <<<")
 
       if(nextQueue.length > 0){
@@ -537,7 +544,7 @@ class QueueLogController {
 
           }
         } else {
-          const duration = currentQueue.problem.duration
+          const duration = currentQueue.duration
 
           const end = new Date(currentCheckIn.getTime())
           end.setHours(23)
