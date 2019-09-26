@@ -228,18 +228,18 @@ class QueueLogController {
         }
       } else {
         today = new Date()
+        let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
+        console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
         if(lastQueue.checkIn < today){
           checkIn = delayCheckIn(today, distance)
         }else {
-          let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
-          console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
           if(latestSolved > closeTime ){
             next({
               code: 403,
               message: "the queue already beyond closing time"
             })
           }
-          checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
+          checkIn.setTime(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
           today = new Date()
           if((today.getTime()+(distance*60000)) > latestSolved){
             checkIn = delayCheckIn(today, distance)
@@ -352,18 +352,18 @@ class QueueLogController {
         }
       } else {
         today = new Date()
+        let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
+        console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
         if(lastQueue.checkIn < today){
           checkIn = delayCheckIn(today, distance)
         }else {
-          let latestSolved = new Date(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
-          console.log(latestSolved.toLocaleDateString("en-US", options), "latest solved time in local <<<")
           if(latestSolved > closeTime ){
             next({
               code: 403,
               message: "the queue already beyond closing time"
             })
           }
-          checkIn.setTime(lastQueue.checkIn.getTime() + (foundProblem.duration*60000))
+          checkIn.setTime(lastQueue.checkIn.getTime() + (lastQueue.problem.duration*60000))
         }
         
         console.log(distance, "distance")
